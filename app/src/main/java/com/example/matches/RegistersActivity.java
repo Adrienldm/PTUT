@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -197,8 +198,7 @@ public class RegistersActivity extends AppCompatActivity {
 
     protected void initAutocompletion() {
         // autocompletion
-        Places.initialize(getApplicationContext(), "AIzaSyB_qsP8AOP_P0MdlPz-48TDaJYjTP3vbjo");
-
+        Places.initialize(getApplicationContext(), "AIzaSyC3xzSkGUN9FcJvEB45AyJThOBtdskOD_8");
         adresse.setFocusable(false);
         adresse.setOnClickListener(new View.OnClickListener() {
             @Override

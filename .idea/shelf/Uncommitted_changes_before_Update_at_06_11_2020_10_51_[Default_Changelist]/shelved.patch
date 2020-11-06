@@ -1,0 +1,183 @@
+Index: app/src/main/java/com/example/matches/EntrepriseOuEtudiant.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.matches;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\npublic class EntrepriseOuEtudiant extends AppCompatActivity {\r\n    private Button etudiant, entreprise;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_entreprise_ou_etudiant);\r\n        etudiant = (Button) findViewById(R.id.Etudiant);\r\n        entreprise = (Button) findViewById(R.id.Entreprise);\r\n\r\n        etudiant.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                etudiantlaunch();\r\n            }\r\n        });\r\n        entreprise.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                entrepriselaunch();\r\n            }\r\n        });\r\n    }\r\n\r\n    public void etudiantlaunch() {\r\n        Intent intent = new Intent(this, RegistersActivity.class);\r\n        startActivity(intent);\r\n    }\r\n\r\n    public void entrepriselaunch() {\r\n        Intent intent = new Intent(this, RegisterEntrepriseActivity.class);\r\n        startActivity(intent);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/matches/EntrepriseOuEtudiant.java	(revision 3de295aa36668281b0738ebb1f22357d88e11898)
++++ app/src/main/java/com/example/matches/EntrepriseOuEtudiant.java	(date 1604170766260)
+@@ -4,9 +4,18 @@
+ import android.os.Bundle;
+ import android.view.View;
+ import android.widget.Button;
++import android.widget.EditText;
+ 
+ import androidx.appcompat.app.AppCompatActivity;
+ 
++import com.google.android.libraries.places.api.Places;
++import com.google.android.libraries.places.api.model.Place;
++import com.google.android.libraries.places.widget.Autocomplete;
++import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
++
++import java.util.Arrays;
++import java.util.List;
++
+ public class EntrepriseOuEtudiant extends AppCompatActivity {
+     private Button etudiant, entreprise;
+ 
+@@ -34,10 +43,14 @@
+     public void etudiantlaunch() {
+         Intent intent = new Intent(this, RegistersActivity.class);
+         startActivity(intent);
++
+     }
+ 
+     public void entrepriselaunch() {
+         Intent intent = new Intent(this, RegisterEntrepriseActivity.class);
+         startActivity(intent);
+     }
++
++
++
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/matches/RegisterEntrepriseActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.matches;\r\n\r\nimport android.os.Bundle;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\npublic class RegisterEntrepriseActivity extends AppCompatActivity {\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_register_entreprise);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/matches/RegisterEntrepriseActivity.java	(revision 3de295aa36668281b0738ebb1f22357d88e11898)
++++ app/src/main/java/com/example/matches/RegisterEntrepriseActivity.java	(date 1604171010171)
+@@ -1,14 +1,66 @@
+ package com.example.matches;
+ 
++import android.content.Intent;
++import android.graphics.Bitmap;
++import android.graphics.BitmapFactory;
+ import android.os.Bundle;
++import android.util.Log;
++import android.view.View;
++import android.widget.EditText;
++import android.widget.Toast;
+ 
++import androidx.annotation.Nullable;
+ import androidx.appcompat.app.AppCompatActivity;
+ 
++import com.google.android.gms.common.api.Status;
++import com.google.android.libraries.places.api.Places;
++import com.google.android.libraries.places.api.model.Place;
++import com.google.android.libraries.places.widget.Autocomplete;
++import com.google.android.libraries.places.widget.AutocompleteActivity;
++import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
++
++import java.util.Arrays;
++import java.util.List;
++
+ public class RegisterEntrepriseActivity extends AppCompatActivity {
+ 
++    private EditText adresse;
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_register_entreprise);
++        adresse = findViewById(R.id.adresse2);
++        initAutocompletion();
+     }
++
++    protected void initAutocompletion() {
++        // autocompletion
++        Places.initialize(getApplicationContext(), "AIzaSyB_qsP8AOP_P0MdlPz-48TDaJYjTP3vbjo");
++
++        adresse.setFocusable(false);
++        adresse.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
++                        Place.Field.LAT_LNG, Place.Field.NAME);
++                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(getApplicationContext());
++                startActivityForResult(intent, 100);
++            }
++        });
++    }
++
++    @Override
++    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
++        super.onActivityResult(requestCode, resultCode, data);
++        if (resultCode == RESULT_OK && requestCode == 100) {
++            Place place = Autocomplete.getPlaceFromIntent(data);
++            adresse.setText(place.getAddress());
++
++        }
++        else if (resultCode == AutocompleteActivity.RESULT_ERROR){
++            Status status = Autocomplete.getStatusFromIntent(data);
++            Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
++        }
++    }
++
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/matches/RegistersActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.matches;\r\n\r\nimport android.content.Intent;\r\nimport android.database.Cursor;\r\nimport android.graphics.Bitmap;\r\nimport android.graphics.BitmapFactory;\r\nimport android.net.Uri;\r\nimport android.os.Bundle;\r\nimport android.provider.MediaStore;\r\nimport android.text.TextUtils;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport com.google.android.gms.common.api.Status;\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.OnFailureListener;\r\nimport com.google.android.gms.tasks.OnSuccessListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.android.libraries.places.api.Places;\r\nimport com.google.android.libraries.places.api.model.Place;\r\nimport com.google.android.libraries.places.widget.Autocomplete;\r\nimport com.google.android.libraries.places.widget.AutocompleteActivity;\r\nimport com.google.android.libraries.places.widget.model.AutocompleteActivityMode;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.firestore.DocumentReference;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\n\r\nimport java.util.Arrays;\r\nimport java.util.HashMap;\r\nimport java.util.List;\r\nimport java.util.Map;\r\n\r\npublic class RegistersActivity extends AppCompatActivity {\r\n    EditText nom, prenom, adresseMail, motDePasse, telephone, adresse, age;\r\n    Button register, photo;\r\n    FirebaseAuth firebaseAuth;\r\n    FirebaseFirestore firestore;\r\n    String userID;\r\n    final static int SELECT_PICTURE = 1;\r\n    ImageView imagePhoto;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_register);\r\n\r\n        nom = (EditText) findViewById(R.id.nom);\r\n        prenom = (EditText) findViewById(R.id.prenom);\r\n        adresseMail = (EditText) findViewById(R.id.mail);\r\n        motDePasse = (EditText) findViewById(R.id.MDP);\r\n        telephone = (EditText) findViewById(R.id.tel);\r\n        adresse = (EditText) findViewById(R.id.adresse);\r\n        // autocompletion\r\n        Places.initialize(getApplicationContext(), \"AIzaSyB_qsP8AOP_P0MdlPz-48TDaJYjTP3vbjo\");\r\n\r\n        adresse.setFocusable(false);\r\n        adresse.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,\r\n                        Place.Field.LAT_LNG, Place.Field.NAME);\r\n                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(getApplicationContext());\r\n                startActivityForResult(intent, 100);\r\n            }\r\n        });\r\n\r\n\r\n        age = (EditText) findViewById(R.id.age);\r\n        register = (Button) findViewById(R.id.register);\r\n        imagePhoto = (ImageView) findViewById(R.id.imagePhoto);\r\n        ((Button) findViewById(R.id.photo)).setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                btGalleryClick(v);\r\n            }\r\n        });\r\n\r\n        firebaseAuth = FirebaseAuth.getInstance();\r\n        firestore = FirebaseFirestore.getInstance();\r\n        register.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                final String email = adresseMail.getText().toString().trim();\r\n                String motDP = motDePasse.getText().toString().trim();\r\n                final String nom2 = nom.getText().toString().trim();\r\n                final String prenom2 = prenom.getText().toString().trim();\r\n                final String tel = telephone.getText().toString().trim();\r\n                final String adres = adresse.getText().toString().trim();\r\n                final String age2 = age.getText().toString().trim();\r\n\r\n                /*if(firebaseAuth.getCurrentUser() !=null){\r\n                    startActivity(new Intent(getApplicationContext(),matchActivity.class));\r\n                    finish();\r\n                }*/\r\n                if (TextUtils.isEmpty(prenom2)) {\r\n                    prenom.setError(\"Name is required\");\r\n                    return;\r\n                }\r\n                if (TextUtils.isEmpty(nom2)) {\r\n                    nom.setError(\"Name is required\");\r\n                    return;\r\n                }\r\n                if (TextUtils.isEmpty(email)) {\r\n                    adresseMail.setError(\"Email is required\");\r\n                    return;\r\n                }\r\n                if (TextUtils.isEmpty(motDP)) {\r\n                    motDePasse.setError(\"Password is required\");\r\n                    return;\r\n                }\r\n                if (TextUtils.isEmpty(tel)) {\r\n                    telephone.setError(\"Phone is required\");\r\n                    return;\r\n                }\r\n                if (TextUtils.isEmpty(adres)) {\r\n                    adresse.setError(\"Adress is required\");\r\n                    return;\r\n                }\r\n                if (TextUtils.isEmpty(age2)) {\r\n                    age.setError(\"Age is required\");\r\n                    return;\r\n                }\r\n\r\n\r\n                if (motDP.length() < 6) {\r\n                    motDePasse.setError(\"Password Must be >= 6 Caracters\");\r\n                    return;\r\n                }\r\n                //Register the user into the firebase\r\n                firebaseAuth.createUserWithEmailAndPassword(email, motDP).addOnCompleteListener(new OnCompleteListener<AuthResult>() {\r\n                    @Override\r\n                    public void onComplete(@NonNull Task<AuthResult> task) {\r\n                        if (task.isSuccessful()) {\r\n                            Toast.makeText(RegistersActivity.this, \"User Created\", Toast.LENGTH_SHORT).show();\r\n                            userID = firebaseAuth.getCurrentUser().getUid();\r\n                            DocumentReference documentReference = firestore.collection(\"users\").document(userID);\r\n                            Map<String, Object> user = new HashMap<>();\r\n                            user.put(\"nom\", nom2);\r\n                            user.put(\"prenom\", prenom2);\r\n                            user.put(\"email\", email);\r\n                            user.put(\"telephone\", tel);\r\n                            user.put(\"adresse\", adres);\r\n                            user.put(\"age\", age2);\r\n                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {\r\n                                @Override\r\n                                public void onSuccess(Void aVoid) {\r\n                                    Log.d(\"TAG\", \"OnSucces: user profile is created for\" + userID);\r\n                                }\r\n                            }).addOnFailureListener(new OnFailureListener() {\r\n                                @Override\r\n                                public void onFailure(@NonNull Exception e) {\r\n                                    Log.d(\"TAG\", \"OnFailure: \" + e.toString());\r\n                                }\r\n                            });\r\n                            //startActivity(new Intent(getApplicationContext(),matchActivity.class));\r\n\r\n                        } else {\r\n                            Toast.makeText(RegistersActivity.this, \"Error ! \" + task.getException().getMessage(), Toast.LENGTH_LONG).show();\r\n                        }\r\n                    }\r\n                });\r\n            }\r\n        });\r\n    }\r\n    public void btGalleryClick(View v) {\r\n        //Création puis ouverture de la boite de dialogue\r\n        Intent intent = new Intent(Intent.ACTION_PICK);\r\n        intent.setType(\"image/*\");\r\n        intent.setAction(Intent.ACTION_GET_CONTENT);\r\n        startActivityForResult(Intent.createChooser(intent, \"\"), SELECT_PICTURE);\r\n    }\r\n\r\n    @Override\r\n    protected void onActivityResult(int requestCode, int resultCode, Intent data) {\r\n        super.onActivityResult(requestCode, resultCode, data);\r\n        if (resultCode == RESULT_OK && requestCode == 100) {\r\n            Place place = Autocomplete.getPlaceFromIntent(data);\r\n            adresse.setText(place.getAddress());\r\n\r\n            switch (requestCode) {\r\n                case SELECT_PICTURE:\r\n                    String path = getRealPathFromURI(data.getData());\r\n                    Log.d(\"Choose Picture\", path);\r\n                    //Transformer la photo en Bitmap\r\n                    Bitmap bitmap = BitmapFactory.decodeFile(path);\r\n                    //Afficher le Bitmap\r\n                    imagePhoto.setImageBitmap(bitmap);\r\n                    break;\r\n            }\r\n        }\r\n        else if (resultCode == AutocompleteActivity.RESULT_ERROR){\r\n            Status status = Autocomplete.getStatusFromIntent(data);\r\n            Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();\r\n        }\r\n    }\r\n    private String getRealPathFromURI(Uri contentURI) {\r\n        String result;\r\n        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);\r\n        if (cursor == null) {\r\n            result = contentURI.getPath();\r\n        } else {\r\n            cursor.moveToFirst();\r\n            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);\r\n            result = cursor.getString(idx);\r\n            cursor.close();\r\n        }\r\n        return result;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/matches/RegistersActivity.java	(revision 3de295aa36668281b0738ebb1f22357d88e11898)
++++ app/src/main/java/com/example/matches/RegistersActivity.java	(date 1604170766255)
+@@ -48,6 +48,7 @@
+     final static int SELECT_PICTURE = 1;
+     ImageView imagePhoto;
+ 
++
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+@@ -59,20 +60,8 @@
+         motDePasse = (EditText) findViewById(R.id.MDP);
+         telephone = (EditText) findViewById(R.id.tel);
+         adresse = (EditText) findViewById(R.id.adresse);
+-        // autocompletion
+-        Places.initialize(getApplicationContext(), "AIzaSyB_qsP8AOP_P0MdlPz-48TDaJYjTP3vbjo");
+ 
+-        adresse.setFocusable(false);
+-        adresse.setOnClickListener(new View.OnClickListener() {
+-            @Override
+-            public void onClick(View v) {
+-                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
+-                        Place.Field.LAT_LNG, Place.Field.NAME);
+-                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(getApplicationContext());
+-                startActivityForResult(intent, 100);
+-            }
+-        });
+-
++        initAutocompletion();
+ 
+         age = (EditText) findViewById(R.id.age);
+         register = (Button) findViewById(R.id.register);
+@@ -202,6 +191,22 @@
+             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
+         }
+     }
++
++    protected void initAutocompletion() {
++        // autocompletion
++        Places.initialize(getApplicationContext(), "AIzaSyB_qsP8AOP_P0MdlPz-48TDaJYjTP3vbjo");
++
++        adresse.setFocusable(false);
++        adresse.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
++                        Place.Field.LAT_LNG, Place.Field.NAME);
++                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(getApplicationContext());
++                startActivityForResult(intent, 100);
++            }
++        });
++    }
+     private String getRealPathFromURI(Uri contentURI) {
+         String result;
+         Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
