@@ -54,7 +54,7 @@ public class RegistersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         nom = (EditText) findViewById(R.id.nom);
-        prenom = (EditText) findViewById(R.id.prenom);
+        prenom = (EditText) findViewById(R.id.prenomE);
         adresseMail = (EditText) findViewById(R.id.mail);
         motDePasse = (EditText) findViewById(R.id.MDP);
         telephone = (EditText) findViewById(R.id.tel);
@@ -105,6 +105,7 @@ public class RegistersActivity extends AppCompatActivity {
                     prenom.setError("Name is required");
                     return;
                 }
+
                 if (TextUtils.isEmpty(nom2)) {
                     nom.setError("Name is required");
                     return;
@@ -135,25 +136,27 @@ public class RegistersActivity extends AppCompatActivity {
                     motDePasse.setError("Password Must be >= 6 Caracters");
                     return;
                 }
-                //Register the user into the firebase
+                //enregister un utilisateur avec un email et un mdp
                 firebaseAuth.createUserWithEmailAndPassword(email, motDP).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        //lui ajouter DES ATTIBUTS dans la firebase avec firebaseauth et son id
                         if (task.isSuccessful()) {
                             Toast.makeText(RegistersActivity.this, "User Created", Toast.LENGTH_SHORT).show();
                             userID = firebaseAuth.getCurrentUser().getUid();
-                            DocumentReference documentReference = firestore.collection("users").document(userID);
+                            DocumentReference documentReference = firestore.collection("etudiant").document(userID);
                             Map<String, Object> user = new HashMap<>();
-                            user.put("nom", nom2);
-                            user.put("prenom", prenom2);
-                            user.put("email", email);
-                            user.put("telephone", tel);
-                            user.put("adresse", adres);
-                            user.put("age", age2);
+                            user.put("nom_etudiant", nom2);
+                            user.put("prenom_etudiant", prenom2);
+                            user.put("email_etudiant", email);
+                            user.put("telephone_etudiant", tel);
+                            user.put("adresse_etudiant", adres);
+                            user.put("age_etudiant", age2);
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d("TAG", "OnSucces: user profile is created for" + userID);
+                                    startregister2();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -214,5 +217,10 @@ public class RegistersActivity extends AppCompatActivity {
             cursor.close();
         }
         return result;
+    }
+
+    public void startregister2() {
+        Intent intent = new Intent(this, matchActivity.class);
+        startActivity(intent);
     }
 }

@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         validationConnexionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //prendre l'instance de la firebase
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
 
                 String login = identifiantTextView.getText().toString().trim();
@@ -91,15 +92,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 progressBar.setVisibility(View.VISIBLE);
 
-                //identification de l'user
+                //identification de l'user avec son login et son password
                 fAuth.signInWithEmailAndPassword(login, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
+                    //quand c'est fait
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        //si son login et son mdp sont bon et dans la firebase
                         if (task.isSuccessful()) {
                             Toast.makeText(MainActivity.this, "succeful login", Toast.LENGTH_LONG).show();
-                            //validationConnexionButton.setOnClickListener(MainActivity.this);
-                            //Intent intent = new Intent(this,matchActivity.class);
-                            //startActivity(intent);
+                            progressBar.setVisibility(View.INVISIBLE);
                             startregister2();
 
 
