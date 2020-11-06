@@ -48,6 +48,7 @@ public class RegistersActivity extends AppCompatActivity {
     final static int SELECT_PICTURE = 1;
     ImageView imagePhoto;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,20 +60,8 @@ public class RegistersActivity extends AppCompatActivity {
         motDePasse = (EditText) findViewById(R.id.MDP);
         telephone = (EditText) findViewById(R.id.tel);
         adresse = (EditText) findViewById(R.id.adresse);
-        // autocompletion
-        Places.initialize(getApplicationContext(), "AIzaSyB_qsP8AOP_P0MdlPz-48TDaJYjTP3vbjo");
 
-        adresse.setFocusable(false);
-        adresse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
-                        Place.Field.LAT_LNG, Place.Field.NAME);
-                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(getApplicationContext());
-                startActivityForResult(intent, 100);
-            }
-        });
-
+        initAutocompletion();
 
         age = (EditText) findViewById(R.id.age);
         register = (Button) findViewById(R.id.register);
@@ -204,6 +193,22 @@ public class RegistersActivity extends AppCompatActivity {
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    protected void initAutocompletion() {
+        // autocompletion
+        Places.initialize(getApplicationContext(), "AIzaSyB_qsP8AOP_P0MdlPz-48TDaJYjTP3vbjo");
+
+        adresse.setFocusable(false);
+        adresse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
+                        Place.Field.LAT_LNG, Place.Field.NAME);
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(getApplicationContext());
+                startActivityForResult(intent, 100);
+            }
+        });
     }
     private String getRealPathFromURI(Uri contentURI) {
         String result;
