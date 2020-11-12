@@ -21,21 +21,21 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="1597dp">
 
 
                 <SeekBar
                     android:id="@+id/distanceSeekBar"
                     android:layout_width="355dp"
                     android:layout_height="19dp"
+                    android:max="5000"
+                    android:progress="100"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.361"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/mapView"
-                    app:layout_constraintVertical_bias="0.094"
-                    android:max="5000"
-                    android:progress="100"/>
+                    app:layout_constraintVertical_bias="0.094" />
 
                 <Button
                     android:id="@+id/button5"
@@ -45,10 +45,10 @@
                     android:text="Lettre de motivation"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.884"
+                    app:layout_constraintHorizontal_bias="0.722"
                     app:layout_constraintStart_toEndOf="@+id/button4"
                     app:layout_constraintTop_toBottomOf="@+id/age"
-                    app:layout_constraintVertical_bias="0.397" />
+                    app:layout_constraintVertical_bias="0.358" />
 
                 <Button
                     android:id="@+id/button4"
@@ -56,12 +56,12 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/custombutton"
                     android:text="CV"
-                    app:layout_constraintBottom_toTopOf="@+id/distanceSeekBar"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.171"
+                    app:layout_constraintHorizontal_bias="0.18"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/age"
-                    app:layout_constraintVertical_bias="0.424" />
+                    app:layout_constraintVertical_bias="0.359" />
 
                 <TextView
                     android:id="@+id/parametreView"
@@ -76,18 +76,6 @@
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/register"
-                    android:layout_width="107dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/custombutton"
-                    android:text="s'inscrire"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.928"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/distanceSeekBar" />
 
                 <EditText
                     android:id="@+id/nom"
@@ -170,10 +158,10 @@
                     app:boxBackgroundMode="none"
                     app:layout_constraintBottom_toTopOf="@+id/button4"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.59"
+                    app:layout_constraintHorizontal_bias="0.888"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/age"
-                    app:layout_constraintVertical_bias="1.0" />
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <EditText
                     android:id="@+id/prenomE"
@@ -208,15 +196,31 @@
 
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/mapView"
-                    android:layout_width="279dp"
-                    android:layout_height="248dp"
+                    android:layout_width="341dp"
+                    android:layout_height="392dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.568"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/button5" />
+                    app:layout_constraintTop_toBottomOf="@+id/button5"
+                    app:layout_constraintVertical_bias="0.211" />
+
+                <Button
+                    android:id="@+id/register"
+                    android:layout_width="107dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/custombutton"
+                    android:text="s'inscrire"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.898"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/distanceSeekBar"
+                    app:layout_constraintVertical_bias="0.678" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
