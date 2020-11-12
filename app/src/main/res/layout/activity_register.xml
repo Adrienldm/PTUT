@@ -74,7 +74,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
                 <Button
                     android:id="@+id/register"
                     android:layout_width="107dp"

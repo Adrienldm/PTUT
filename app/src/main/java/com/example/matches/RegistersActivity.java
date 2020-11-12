@@ -16,28 +16,18 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RegistersActivity extends AppCompatActivity {
@@ -48,7 +38,6 @@ public class RegistersActivity extends AppCompatActivity {
     String userID;
     final static int SELECT_PICTURE = 1;
     ImageView imagePhoto;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +50,6 @@ public class RegistersActivity extends AppCompatActivity {
         motDePasse = (EditText) findViewById(R.id.MDP);
         telephone = (EditText) findViewById(R.id.tel);
         adresse = (EditText) findViewById(R.id.adresse);
-
-        initAutocompletion();
-
         age = (EditText) findViewById(R.id.age);
         register = (Button) findViewById(R.id.register);
         imagePhoto = (ImageView) findViewById(R.id.imagePhoto);
@@ -175,10 +161,7 @@ public class RegistersActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == 100) {
-            Place place = Autocomplete.getPlaceFromIntent(data);
-            adresse.setText(place.getAddress());
-
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case SELECT_PICTURE:
                     String path = getRealPathFromURI(data.getData());
@@ -190,25 +173,6 @@ public class RegistersActivity extends AppCompatActivity {
                     break;
             }
         }
-        else if (resultCode == AutocompleteActivity.RESULT_ERROR){
-            Status status = Autocomplete.getStatusFromIntent(data);
-            Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    protected void initAutocompletion() {
-        // autocompletion
-        Places.initialize(getApplicationContext(), "AIzaSyC3xzSkGUN9FcJvEB45AyJThOBtdskOD_8");
-        adresse.setFocusable(false);
-        adresse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
-                        Place.Field.LAT_LNG, Place.Field.NAME);
-                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(getApplicationContext());
-                startActivityForResult(intent, 100);
-            }
-        });
     }
     private String getRealPathFromURI(Uri contentURI) {
         String result;

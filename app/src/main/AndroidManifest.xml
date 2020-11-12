@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RegisterEntrepriseActivity"></activity>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCX0Jmta-vEleEiNafBqSFax8IYg6kL0tM"/>
+        <activity android:name=".profil"></activity>
+        <activity android:name=".RegisterEntrepriseActivity" />
         <activity android:name=".EntrepriseOuEtudiant" />
         <activity android:name=".RegistersActivity" />
         <activity android:name=".matchActivity" />

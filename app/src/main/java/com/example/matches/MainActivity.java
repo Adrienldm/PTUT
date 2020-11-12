@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void startregister2() {
-        Intent intent = new Intent(this, matchActivity.class);
+        Intent intent = new Intent(this, profil.class);
         startActivity(intent);
     }
 
