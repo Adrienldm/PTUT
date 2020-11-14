@@ -42,23 +42,24 @@
                     android:text="Lettre de motivation"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.606"
+                    app:layout_constraintHorizontal_bias="0.605"
                     app:layout_constraintStart_toEndOf="@+id/button4"
                     app:layout_constraintTop_toBottomOf="@+id/age"
-                    app:layout_constraintVertical_bias="0.31" />
+                    app:layout_constraintVertical_bias="0.357" />
+
 
                 <Button
                     android:id="@+id/button4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/custombutton"
                     android:text="CV"
                     app:layout_constraintBottom_toTopOf="@+id/seekBar"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.148"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:background="@drawable/custombutton"
-                    app:layout_constraintTop_toBottomOf="@+id/age" />
-
+                    app:layout_constraintTop_toBottomOf="@+id/age"
+                    app:layout_constraintVertical_bias="0.532" />
 
                 <TextView
                     android:id="@+id/parametreView"
@@ -69,10 +70,12 @@
                     android:text="Creation du compte"
                     android:textSize="45sp"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/prenomE"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <Button
                     android:id="@+id/register"
@@ -159,35 +162,41 @@
                     app:layout_constraintTop_toBottomOf="@+id/adresse" />
 
                 <EditText
+                    android:id="@+id/desc"
+                    android:layout_width="369dp"
+                    android:layout_height="248dp"
+                    android:layout_marginTop="24dp"
+                    android:hint="description :\nBonjour,je me présente je suis Adrien LANDEMAINE je suis étudiant en deuxième année d\'IUT informatique à Laval et je cherche un stage de fin d\'étude en développement informatique d\'une durée minimale de 11 semaines je me permets de vous contacter afin de vous proposer une candidature libre au travers de mon C\.V\. et d\'une lettre de motivation"
+                    app:boxBackgroundMode="none"
+                    app:layout_constraintBottom_toTopOf="@+id/button4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.59"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/age"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <EditText
                     android:id="@+id/prenomE"
                     android:layout_width="258dp"
                     android:layout_height="49dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="348dp"
                     android:hint="Prenom"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.12"
+                    app:layout_constraintHorizontal_bias="0.134"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/photo" />
-
-                <Button
-                    android:id="@+id/photo"
-                    android:layout_width="159dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/custombutton"
-                    android:text="Ajouter une photo"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.118"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/parametreView" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/imagePhoto"
-                    android:layout_width="54dp"
-                    android:layout_height="64dp"
+                    android:id="@+id/imagetest"
+                    android:layout_width="137dp"
+                    android:layout_height="138dp"
+                    android:layout_marginBottom="7dp"
+                    app:layout_constraintBottom_toTopOf="@+id/prenomE"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/photo"
+                    app:layout_constraintHorizontal_bias="0.173"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/parametreView"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    app:srcCompat="@drawable/custombutton" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

@@ -1,16 +1,22 @@
 package com.example.matches;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import javax.annotation.Nullable;
 
@@ -19,6 +25,10 @@ public class profil extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
     String userId;
+    FirebaseStorage storage;
+    ImageView profilepic;
+
+    String img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +39,8 @@ public class profil extends AppCompatActivity {
         mail = (TextView) findViewById(R.id.textView13);
         adresse = (TextView) findViewById(R.id.textView4);
         description = (TextView) findViewById(R.id.textView6);
+        profilepic = (ImageView) findViewById(R.id.profilepic);
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -44,7 +56,27 @@ public class profil extends AppCompatActivity {
                 mail.setText(documentSnapshot.getString("email_etudiant"));
                 adresse.setText(documentSnapshot.getString("adresse_etudiant"));
                 description.setText(documentSnapshot.getString("description_etudiant"));
+                img = documentSnapshot.getString("image_etudiant");
+                downLoadWithBytes();
             }
         });
     }
+
+    public void downLoadWithBytes() {
+        // Create a storage reference from our app
+        storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference().child("images").child("" + img);
+        storageRef.getBytes(1920 * 1080 * 5).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                profilepic.setImageBitmap(bitmap);
+                profilepic.setRotation(-90);
+            }
+        });
+
+
+    }
+
+
 }

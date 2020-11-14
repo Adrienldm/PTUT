@@ -1,12 +1,9 @@
 package com.example.matches;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -28,29 +25,44 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class RegistersActivity extends AppCompatActivity {
-    EditText nom, prenom, adresseMail, motDePasse, telephone, adresse, age;
+    final String randomkey = UUID.randomUUID().toString();
     Button register, photo;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
     String userID;
+    public Uri imageUri;
+    EditText nom, prenom, adresseMail, motDePasse, telephone, adresse, age, description;
     final static int SELECT_PICTURE = 1;
-    ImageView imagePhoto;
+    private StorageReference storageReference;
+    private FirebaseStorage storage;
+    private ImageView imagePhoto, profilpic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        profilpic = (ImageView) findViewById(R.id.imagetest);
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
 
         nom = (EditText) findViewById(R.id.nom);
         prenom = (EditText) findViewById(R.id.prenomE);
@@ -61,13 +73,17 @@ public class RegistersActivity extends AppCompatActivity {
         initAutocompletion();
         age = (EditText) findViewById(R.id.age);
         register = (Button) findViewById(R.id.register);
-        imagePhoto = (ImageView) findViewById(R.id.imagePhoto);
-        ((Button) findViewById(R.id.photo)).setOnClickListener(new View.OnClickListener() {
+
+        description = (EditText) findViewById(R.id.desc);
+
+
+        profilpic.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                btGalleryClick(v);
+            public void onClick(View view) {
+                choosePicture();
             }
         });
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -81,16 +97,12 @@ public class RegistersActivity extends AppCompatActivity {
                 final String tel = telephone.getText().toString().trim();
                 final String adres = adresse.getText().toString().trim();
                 final String age2 = age.getText().toString().trim();
+                final String description2 = description.getText().toString().trim();
 
-                /*if(firebaseAuth.getCurrentUser() !=null){
-                    startActivity(new Intent(getApplicationContext(),matchActivity.class));
-                    finish();
-                }*/
                 if (TextUtils.isEmpty(prenom2)) {
                     prenom.setError("Name is required");
                     return;
                 }
-
                 if (TextUtils.isEmpty(nom2)) {
                     nom.setError("Name is required");
                     return;
@@ -115,6 +127,10 @@ public class RegistersActivity extends AppCompatActivity {
                     age.setError("Age is required");
                     return;
                 }
+                if (TextUtils.isEmpty(description2)) {
+                    age.setError("you need to add a description");
+                    return;
+                }
 
 
                 if (motDP.length() < 6) {
@@ -129,6 +145,8 @@ public class RegistersActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(RegistersActivity.this, "User Created", Toast.LENGTH_SHORT).show();
                             userID = firebaseAuth.getCurrentUser().getUid();
+
+
                             DocumentReference documentReference = firestore.collection("etudiant").document(userID);
                             Map<String, Object> user = new HashMap<>();
                             user.put("nom_etudiant", nom2);
@@ -137,6 +155,8 @@ public class RegistersActivity extends AppCompatActivity {
                             user.put("telephone_etudiant", tel);
                             user.put("adresse_etudiant", adres);
                             user.put("age_etudiant", age2);
+                            user.put("description_etudiant", description2);
+                            user.put("image_etudiant", randomkey);
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -149,7 +169,6 @@ public class RegistersActivity extends AppCompatActivity {
                                     Log.d("TAG", "OnFailure: " + e.toString());
                                 }
                             });
-                            //startActivity(new Intent(getApplicationContext(),matchActivity.class));
 
                         } else {
                             Toast.makeText(RegistersActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -159,6 +178,48 @@ public class RegistersActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void choosePicture() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, 1);
+    }
+
+
+    private void uploadPicture() {
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setTitle("Uploading Image...");
+        pd.show();
+
+
+        StorageReference riversRef = storageReference.child("images/" + randomkey);
+
+        riversRef.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        pd.dismiss();
+                        Snackbar.make(findViewById(android.R.id.content), "Image Uploaded.", Snackbar.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        pd.dismiss();
+                        Toast.makeText(getApplicationContext(), "Failed to upload", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progressPercent = (100.00 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        pd.setMessage("Percentage " + (int) progressPercent + "%");
+                    }
+                });
+    }
+
+
     public void btGalleryClick(View v) {
         //Création puis ouverture de la boite de dialogue
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -167,44 +228,26 @@ public class RegistersActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, ""), SELECT_PICTURE);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 100) {
-            switch (requestCode) {
-                case SELECT_PICTURE:
-                    String path = getRealPathFromURI(data.getData());
-                    Log.d("Choose Picture", path);
-                    //Transformer la photo en Bitmap
-                    Bitmap bitmap = BitmapFactory.decodeFile(path);
-                    //Afficher le Bitmap
-                    imagePhoto.setImageBitmap(bitmap);
-                    break;
-            }
             Place place = Autocomplete.getPlaceFromIntent(data);
             adresse.setText(place.getAddress());
-        }
-        else if (resultCode == AutocompleteActivity.RESULT_ERROR){
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
+        } else if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            profilpic.setImageURI(imageUri);
+            uploadPicture();
         }
-    }
-    private String getRealPathFromURI(Uri contentURI) {
-        String result;
-        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) {
-            result = contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            result = cursor.getString(idx);
-            cursor.close();
-        }
-        return result;
     }
 
+
     public void startregister2() {
-        Intent intent = new Intent(this, matchActivity.class);
+        Intent intent = new Intent(this, profil.class);
         startActivity(intent);
     }
 
