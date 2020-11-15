@@ -69,7 +69,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     private MapView mapView;
     private GoogleMap gMap;
     Circle circle;
-    private ImageView img1, img2, img3, img4, img5, img6;
+    private ImageView img1;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -79,11 +79,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         setContentView(R.layout.activity_register);
 
         img1 = (ImageView) findViewById(R.id.image1);
-        img2 = (ImageView) findViewById(R.id.image2);
-        img3 = (ImageView) findViewById(R.id.image3);
-        img4 = (ImageView) findViewById(R.id.image4);
-        img5 = (ImageView) findViewById(R.id.image5);
-        img6 = (ImageView) findViewById(R.id.image6);
+
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
@@ -250,6 +246,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     private void uploadPicture() {
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setTitle("Uploading Image...");
+        pd.setCancelable(false);
         pd.show();
 
 
@@ -277,15 +274,6 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                         pd.setMessage("Percentage " + (int) progressPercent + "%");
                     }
                 });
-    }
-
-
-    public void btGalleryClick(View v) {
-        //Création puis ouverture de la boite de dialogue
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, ""), SELECT_PICTURE);
     }
 
 
