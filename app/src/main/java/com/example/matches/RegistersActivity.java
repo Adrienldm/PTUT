@@ -2,6 +2,7 @@ package com.example.matches;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,12 +11,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,7 +52,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class RegistersActivity extends AppCompatActivity {
+public class RegistersActivity extends AppCompatActivity implements OnMapReadyCallback {
     final String randomkey = UUID.randomUUID().toString();
     Button register, photo;
     FirebaseAuth firebaseAuth;
@@ -53,6 +64,14 @@ public class RegistersActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private FirebaseStorage storage;
     private ImageView imagePhoto, profilpic;
+    private SeekBar distanceSeekBar;
+    private TextView distanceTextView;
+    private MapView mapView;
+    private GoogleMap gMap;
+    Circle circle;
+    LatLng myPosition = new LatLng(0,0);
+
+    private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +94,11 @@ public class RegistersActivity extends AppCompatActivity {
         register = (Button) findViewById(R.id.register);
 
         description = (EditText) findViewById(R.id.desc);
+        distanceSeekBar = (SeekBar) findViewById(R.id.distanceSeekBar);
+        distanceTextView = (TextView) findViewById(R.id.distanceTextView);
+
+
+
 
 
         profilpic.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +201,41 @@ public class RegistersActivity extends AppCompatActivity {
                 });
             }
         });
+
+        distanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progressChangedValue = 0;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                progressChangedValue = i;
+                int value = (progressChangedValue * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
+                distanceTextView.setText("" + progressChangedValue);
+                distanceTextView.setX(seekBar.getX() + value + seekBar.getThumbOffset() / 2 - 10);
+                distanceTextView.setY(seekBar.getY());
+                circle.setRadius(progressChangedValue);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+
+            }
+        });
+
+        Bundle mapViewBundle = null;
+        if (savedInstanceState != null) {
+            mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY);
+        }
+
+        mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onCreate(mapViewBundle);
+        mapView.getMapAsync(this);
+
     }
 
     private void choosePicture() {
@@ -234,6 +293,7 @@ public class RegistersActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 100) {
             Place place = Autocomplete.getPlaceFromIntent(data);
+            myPosition = place.getLatLng();
             adresse.setText(place.getAddress());
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);
@@ -264,5 +324,63 @@ public class RegistersActivity extends AppCompatActivity {
                 startActivityForResult(intent, 100);
             }
         });
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Bundle mapViewBundle = outState.getBundle(MAP_VIEW_BUNDLE_KEY);
+        if (mapViewBundle == null) {
+            mapViewBundle = new Bundle();
+            outState.putBundle(MAP_VIEW_BUNDLE_KEY, mapViewBundle);
+        }
+
+        mapView.onSaveInstanceState(mapViewBundle);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        mapView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mapView.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        gMap = googleMap;
+        gMap.setMinZoomPreference(12);
+        gMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(myPosition);
+        gMap.addMarker(markerOptions);
+
+        circle = gMap.addCircle(new CircleOptions().center(new LatLng(myPosition.latitude, myPosition.longitude)).strokeColor(Color.RED));
+
     }
 }
