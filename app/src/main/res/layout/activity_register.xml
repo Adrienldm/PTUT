@@ -19,63 +19,155 @@
             android:layout_marginRight="10dp"
             android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/parametreView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="Creation du compte"
+                android:textSize="45sp"
+                android:textStyle="bold" />
 
+            <ImageView
+                android:id="@+id/imagetest"
+                android:layout_width="137dp"
+                android:layout_height="138dp"
+                android:layout_marginBottom="7dp"
+                app:srcCompat="@drawable/custombutton" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/nom"
+                    android:layout_width="257dp"
+                    android:layout_height="49dp"
+                    android:hint="Nom"
+                    app:boxBackgroundMode="none" />
+
+                <EditText
+                    android:id="@+id/prenomE"
+                    android:layout_width="258dp"
+                    android:layout_height="49dp"
+                    android:layout_marginTop="16dp"
+                    android:hint="Prenom" />
+
+                <EditText
+                    android:id="@+id/age"
+                    android:layout_width="257dp"
+                    android:layout_height="49dp"
+                    android:layout_marginTop="16dp"
+                    android:hint="Age"
+                    app:boxBackgroundMode="none" />
+
+                <EditText
+                    android:id="@+id/mail"
+                    android:layout_width="257dp"
+                    android:layout_height="49dp"
+                    android:layout_marginTop="16dp"
+                    android:hint="Adresse mail"
+                    app:boxBackgroundMode="none" />
+
+                <EditText
+                    android:id="@+id/adresse"
+                    android:layout_width="257dp"
+                    android:layout_height="49dp"
+                    android:layout_marginTop="16dp"
+                    android:hint="Adresse postale"
+                    app:boxBackgroundMode="none" />
+
+                <EditText
+                    android:id="@+id/MDP"
+                    android:layout_width="257dp"
+                    android:layout_height="49dp"
+                    android:layout_marginTop="16dp"
+                    android:hint="Mot de passe"
+                    app:boxBackgroundMode="none" />
+
+                <EditText
+                    android:id="@+id/tel"
+                    android:layout_width="257dp"
+                    android:layout_height="49dp"
+                    android:layout_marginTop="16dp"
+                    android:hint="Téléphone"
+                    app:boxBackgroundMode="none" />
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/desc"
+                android:layout_width="369dp"
+                android:layout_height="248dp"
+                android:layout_marginTop="24dp"
+                android:hint="description :\nBonjour,je me présente je suis Adrien LANDEMAINE je suis étudiant en deuxième année d\'IUT informatique à Laval et je cherche un stage de fin d\'étude en développement informatique d\'une durée minimale de 11 semaines je me permets de vous contacter afin de vous proposer une candidature libre au travers de mon C\.V\. et d\'une lettre de motivation"
+                app:boxBackgroundMode="none" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <Button
+                        android:id="@+id/button4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="65dp"
+                        android:layout_marginRight="65dp"
+                        android:background="@drawable/custombutton"
+                        android:text="CV"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/button5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/button5"
+                        android:layout_width="173dp"
+                        android:layout_height="46dp"
+                        android:background="@drawable/custombutton"
+                        android:text="Lettre de motivation"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/button4"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="211dp"
+                    android:layout_weight="1" />
 
                 <SeekBar
                     android:id="@+id/seekBar"
                     android:layout_width="355dp"
                     android:layout_height="19dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.327"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/button5" />
+                    android:layout_weight="0" />
+            </LinearLayout>
 
-                <Button
-                    android:id="@+id/button5"
-                    android:layout_width="173dp"
-                    android:layout_height="46dp"
-                    android:background="@drawable/custombutton"
-                    android:text="Lettre de motivation"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.605"
-                    app:layout_constraintStart_toEndOf="@+id/button4"
-                    app:layout_constraintTop_toBottomOf="@+id/age"
-                    app:layout_constraintVertical_bias="0.357" />
-
-
-                <Button
-                    android:id="@+id/button4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/custombutton"
-                    android:text="CV"
-                    app:layout_constraintBottom_toTopOf="@+id/seekBar"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.148"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/age"
-                    app:layout_constraintVertical_bias="0.532" />
-
-                <TextView
-                    android:id="@+id/parametreView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Creation du compte"
-                    android:textSize="45sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/prenomE"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <Button
                     android:id="@+id/register"
@@ -85,120 +177,10 @@
                     android:text="s'inscrire"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.928"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/seekBar" />
-
-                <EditText
-                    android:id="@+id/nom"
-                    android:layout_width="257dp"
-                    android:layout_height="49dp"
-                    android:layout_marginTop="16dp"
-                    android:hint="Nom"
-                    app:boxBackgroundMode="none"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.133"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/prenomE" />
-
-                <EditText
-                    android:id="@+id/mail"
-                    android:layout_width="257dp"
-                    android:layout_height="49dp"
-                    android:layout_marginTop="16dp"
-                    android:hint="Adresse mail"
-                    app:boxBackgroundMode="none"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.12"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nom" />
-
-                <EditText
-                    android:id="@+id/MDP"
-                    android:layout_width="257dp"
-                    android:layout_height="49dp"
-                    android:layout_marginTop="16dp"
-                    android:hint="Mot de passe"
-                    app:boxBackgroundMode="none"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.119"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mail" />
-
-                <EditText
-                    android:id="@+id/tel"
-                    android:layout_width="257dp"
-                    android:layout_height="49dp"
-                    android:layout_marginTop="16dp"
-                    android:hint="Téléphone"
-                    app:boxBackgroundMode="none"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.119"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/MDP" />
-
-                <EditText
-                    android:id="@+id/adresse"
-                    android:layout_width="257dp"
-                    android:layout_height="49dp"
-                    android:layout_marginTop="16dp"
-                    android:hint="Adresse postale"
-                    app:boxBackgroundMode="none"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.119"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tel" />
-
-                <EditText
-                    android:id="@+id/age"
-                    android:layout_width="257dp"
-                    android:layout_height="49dp"
-                    android:layout_marginTop="16dp"
-                    android:hint="Age"
-                    app:boxBackgroundMode="none"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.119"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/adresse" />
-
-                <EditText
-                    android:id="@+id/desc"
-                    android:layout_width="369dp"
-                    android:layout_height="248dp"
-                    android:layout_marginTop="24dp"
-                    android:hint="description :\nBonjour,je me présente je suis Adrien LANDEMAINE je suis étudiant en deuxième année d\'IUT informatique à Laval et je cherche un stage de fin d\'étude en développement informatique d\'une durée minimale de 11 semaines je me permets de vous contacter afin de vous proposer une candidature libre au travers de mon C\.V\. et d\'une lettre de motivation"
-                    app:boxBackgroundMode="none"
-                    app:layout_constraintBottom_toTopOf="@+id/button4"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.59"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/age"
-                    app:layout_constraintVertical_bias="1.0" />
-
-                <EditText
-                    android:id="@+id/prenomE"
-                    android:layout_width="258dp"
-                    android:layout_height="49dp"
-                    android:layout_marginTop="348dp"
-                    android:hint="Prenom"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.134"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/imagetest"
-                    android:layout_width="137dp"
-                    android:layout_height="138dp"
-                    android:layout_marginBottom="7dp"
-                    app:layout_constraintBottom_toTopOf="@+id/prenomE"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.173"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/parametreView"
-                    app:srcCompat="@drawable/custombutton" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
