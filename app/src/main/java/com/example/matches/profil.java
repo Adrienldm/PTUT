@@ -71,7 +71,7 @@ public class profil extends AppCompatActivity {
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 profilepic.setImageBitmap(bitmap);
-                profilepic.setRotation(-90);
+
             }
         });
 

@@ -53,8 +53,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class RegistersActivity extends AppCompatActivity implements OnMapReadyCallback {
-
-    List<String> keys;
+    final String randomkey = UUID.randomUUID().toString();
     Button register, photo;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
@@ -64,13 +63,13 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     final static int SELECT_PICTURE = 1;
     private StorageReference storageReference;
     private FirebaseStorage storage;
-    private ImageView img1, img2, img3, img4, img5, img6;
+    LatLng myPosition = new LatLng(0, 0);
     private SeekBar distanceSeekBar;
     private TextView distanceTextView;
     private MapView mapView;
     private GoogleMap gMap;
     Circle circle;
-    LatLng myPosition = new LatLng(0, 0);
+    private ImageView img1, img2, img3, img4, img5, img6;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -85,11 +84,6 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         img4 = (ImageView) findViewById(R.id.image4);
         img5 = (ImageView) findViewById(R.id.image5);
         img6 = (ImageView) findViewById(R.id.image6);
-
-        for (int i = 0; i <= 5; i++) {
-            keys.add(UUID.randomUUID().toString());
-        }
-
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
@@ -111,44 +105,10 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                choosePicture(1);
+                choosePicture();
             }
         });
 
-        img2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                choosePicture(2);
-            }
-        });
-
-        img3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                choosePicture(3);
-            }
-        });
-
-        img4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                choosePicture(4);
-            }
-        });
-
-        img5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                choosePicture(5);
-            }
-        });
-
-        img6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                choosePicture(6);
-            }
-        });
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -221,12 +181,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                             user.put("adresse_etudiant", adres);
                             user.put("age_etudiant", age2);
                             user.put("description_etudiant", description2);
-                            user.put("image_etudiant1", keys.get(1));
-                            user.put("image_etudiant2", keys.get(2));
-                            user.put("image_etudiant3", keys.get(3));
-                            user.put("image_etudiant4", keys.get(4));
-                            user.put("image_etudiant5", keys.get(5));
-                            user.put("image_etudiant6", keys.get(6));
+                            user.put("image_etudiant", randomkey);
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -284,21 +239,21 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
-    private void choosePicture(int i) {
+    private void choosePicture() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, i);
+        startActivityForResult(intent, 1);
     }
 
 
-    private void uploadPicture(int requestCode) {
+    private void uploadPicture() {
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setTitle("Uploading Image...");
         pd.show();
 
 
-        StorageReference riversRef = storageReference.child("images/" + keys.get(requestCode));
+        StorageReference riversRef = storageReference.child("images/" + randomkey);
 
         riversRef.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -325,6 +280,14 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
+    public void btGalleryClick(View v) {
+        //Création puis ouverture de la boite de dialogue
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, ""), SELECT_PICTURE);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -339,28 +302,9 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         } else if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
             img1.setImageURI(imageUri);
-            uploadPicture(requestCode);
-        } else if (requestCode == 2 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            img2.setImageURI(imageUri);
-            uploadPicture(requestCode);
-        } else if (requestCode == 3 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            img3.setImageURI(imageUri);
-            uploadPicture(requestCode);
-        } else if (requestCode == 4 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            img4.setImageURI(imageUri);
-            uploadPicture(requestCode);
-        } else if (requestCode == 5 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            img5.setImageURI(imageUri);
-            uploadPicture(requestCode);
-        } else if (requestCode == 6 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            img6.setImageURI(imageUri);
-            uploadPicture(requestCode);
+            uploadPicture();
         }
+
     }
 
 
