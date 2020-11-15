@@ -53,7 +53,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class RegistersActivity extends AppCompatActivity implements OnMapReadyCallback {
-    final String randomkey = UUID.randomUUID().toString();
+
+    List<String> keys;
     Button register, photo;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
@@ -63,13 +64,13 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     final static int SELECT_PICTURE = 1;
     private StorageReference storageReference;
     private FirebaseStorage storage;
-    private ImageView imagePhoto, profilpic;
+    private ImageView img1, img2, img3, img4, img5, img6;
     private SeekBar distanceSeekBar;
     private TextView distanceTextView;
     private MapView mapView;
     private GoogleMap gMap;
     Circle circle;
-    LatLng myPosition = new LatLng(0,0);
+    LatLng myPosition = new LatLng(0, 0);
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -78,7 +79,17 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        profilpic = (ImageView) findViewById(R.id.imagetest);
+        img1 = (ImageView) findViewById(R.id.image1);
+        img2 = (ImageView) findViewById(R.id.image2);
+        img3 = (ImageView) findViewById(R.id.image3);
+        img4 = (ImageView) findViewById(R.id.image4);
+        img5 = (ImageView) findViewById(R.id.image5);
+        img6 = (ImageView) findViewById(R.id.image6);
+
+        for (int i = 0; i <= 5; i++) {
+            keys.add(UUID.randomUUID().toString());
+        }
+
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
@@ -97,17 +108,47 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         distanceSeekBar = (SeekBar) findViewById(R.id.distanceSeekBar);
         distanceTextView = (TextView) findViewById(R.id.distanceTextView);
 
-
-
-
-
-        profilpic.setOnClickListener(new View.OnClickListener() {
+        img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                choosePicture();
+                choosePicture(1);
             }
         });
 
+        img2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                choosePicture(2);
+            }
+        });
+
+        img3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                choosePicture(3);
+            }
+        });
+
+        img4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                choosePicture(4);
+            }
+        });
+
+        img5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                choosePicture(5);
+            }
+        });
+
+        img6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                choosePicture(6);
+            }
+        });
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -180,7 +221,12 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                             user.put("adresse_etudiant", adres);
                             user.put("age_etudiant", age2);
                             user.put("description_etudiant", description2);
-                            user.put("image_etudiant", randomkey);
+                            user.put("image_etudiant1", keys.get(1));
+                            user.put("image_etudiant2", keys.get(2));
+                            user.put("image_etudiant3", keys.get(3));
+                            user.put("image_etudiant4", keys.get(4));
+                            user.put("image_etudiant5", keys.get(5));
+                            user.put("image_etudiant6", keys.get(6));
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -238,21 +284,21 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
-    private void choosePicture() {
+    private void choosePicture(int i) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, i);
     }
 
 
-    private void uploadPicture() {
+    private void uploadPicture(int requestCode) {
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setTitle("Uploading Image...");
         pd.show();
 
 
-        StorageReference riversRef = storageReference.child("images/" + randomkey);
+        StorageReference riversRef = storageReference.child("images/" + keys.get(requestCode));
 
         riversRef.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -279,14 +325,6 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
-    public void btGalleryClick(View v) {
-        //Création puis ouverture de la boite de dialogue
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, ""), SELECT_PICTURE);
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -300,8 +338,28 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
         } else if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
-            profilpic.setImageURI(imageUri);
-            uploadPicture();
+            img1.setImageURI(imageUri);
+            uploadPicture(requestCode);
+        } else if (requestCode == 2 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            img2.setImageURI(imageUri);
+            uploadPicture(requestCode);
+        } else if (requestCode == 3 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            img3.setImageURI(imageUri);
+            uploadPicture(requestCode);
+        } else if (requestCode == 4 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            img4.setImageURI(imageUri);
+            uploadPicture(requestCode);
+        } else if (requestCode == 5 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            img5.setImageURI(imageUri);
+            uploadPicture(requestCode);
+        } else if (requestCode == 6 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            img6.setImageURI(imageUri);
+            uploadPicture(requestCode);
         }
     }
 

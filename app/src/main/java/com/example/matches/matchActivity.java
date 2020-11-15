@@ -27,10 +27,10 @@ public class matchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matchs);
-        profilImageView = (ImageView) findViewById(R.id.profilImageView);
+       // profilImageView = (ImageView) findViewById(R.id.profilImageView);
         nomEntrepriseTextView = (TextView) findViewById(R.id.nomEntrepriseTextView);
         dernierMessageTextView = (TextView) findViewById(R.id.dernierMessageTextView);
-        dateTextView = (TextView) findViewById(R.id.dateTextView);
+        //dateTextView = (TextView) findViewById(R.id.dateTextView);
 
 
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
