@@ -6,18 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#75147C"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@color/colorAccent"
-        tools:srcCompat="@color/violetIut" />
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
@@ -34,63 +22,101 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="20dp"
-            android:text="Messages"
-            android:textSize="40sp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:paddingBottom="20dp">
+            android:orientation="horizontal">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="191dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/disconnectButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/custombutton"
+                    android:text="Déconnexion"
+                    app:layout_constraintEnd_toStartOf="@+id/profilButton"
+                    app:layout_constraintHorizontal_bias="0.01"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/profilButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/custombutton"
+                    android:text="Profil"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="521dp">
 
             <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                app:srcCompat="@drawable/ic_launcher_foreground"
-                tools:ignore="VectorDrawableCompat"
-                tools:srcCompat="@drawable/ic_launcher_foreground" />
+                android:id="@+id/imageView7"
+                android:layout_width="match_parent"
+                android:layout_height="423dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.744"
+                tools:srcCompat="@tools:sample/avatars" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:layout_width="0px"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="71dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_weight="1">
 
-                <TextView
-                    android:id="@+id/nomEntrepriseTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="30dp"
-                    android:text="CGI entreprise"
-                    android:textSize="30sp" />
+                <ImageButton
+                    android:id="@+id/likeButton"
+                    android:layout_width="89dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="116dp"
+                    android:layout_marginRight="116dp"
+                    android:layout_weight="1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.428"
+                    app:srcCompat="@drawable/custombutton" />
 
-                <TextView
-                    android:id="@+id/dernierMessageTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:autoText="true"
-                    android:clickable="false"
-                    android:text="TextView"
-                    android:textSize="20sp" />
-            </LinearLayout>
+                <ImageButton
+                    android:id="@+id/dislikeButton"
+                    android:layout_width="88dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="168dp"
+                    android:layout_marginLeft="168dp"
+                    android:layout_marginEnd="21dp"
+                    android:layout_marginRight="21dp"
+                    android:layout_weight="1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/likeButton"
+                    app:layout_constraintHorizontal_bias="0.734"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.437"
+                    app:srcCompat="@drawable/custombutton" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <EditText
-                android:id="@+id/dateDernierMessageEditTextMessage"
-                android:layout_width="53dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:ems="10"
-                android:hint="date du dernier message"
-                android:inputType="date"
-                android:textSize="10sp" />
         </LinearLayout>
 
     </LinearLayout>

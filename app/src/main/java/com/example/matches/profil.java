@@ -18,6 +18,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.MessageFormat;
+
 import javax.annotation.Nullable;
 
 public class profil extends AppCompatActivity {
@@ -47,11 +49,13 @@ public class profil extends AppCompatActivity {
 
         userId = firebaseAuth.getCurrentUser().getUid();
 
+
         DocumentReference documentReference = firestore.collection("etudiant").document(userId);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                NomAge.setText(documentSnapshot.getString("nom_etudiant") + " " + documentSnapshot.getString("prenom_etudiant") + ", " + documentSnapshot.getString("age_etudiant"));
+                // if (documentSnapshot == null) throw new AssertionError();
+                NomAge.setText(MessageFormat.format("{0} {1}, {2}", documentSnapshot.getString("nom_etudiant"), documentSnapshot.getString("prenom_etudiant"), documentSnapshot.getString("age_etudiant")));
                 tel.setText(documentSnapshot.getString("telephone_etudiant"));
                 mail.setText(documentSnapshot.getString("email_etudiant"));
                 adresse.setText(documentSnapshot.getString("adresse_etudiant"));

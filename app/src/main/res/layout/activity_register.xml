@@ -9,8 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,8 +58,8 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="595dp"
                 android:orientation="vertical">
 
                 <EditText
@@ -114,6 +115,44 @@
                     android:layout_marginTop="16dp"
                     android:hint="Téléphone"
                     app:boxBackgroundMode="none" />
+
+                <RadioGroup
+                    android:id="@+id/oui"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RadioButton
+                        android:id="@+id/info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Département informatique"
+                        android:textColor="@android:color/secondary_text_light"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/gb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Département génie biologique"
+                        android:textColor="@android:color/secondary_text_light"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/tc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Département technique de commercialisation"
+                        android:textColor="@android:color/secondary_text_light"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/mmi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Département métier du multimédia et de l'informatique"
+                        android:textColor="@android:color/secondary_text_light"
+                        android:textSize="18sp" />
+                </RadioGroup>
 
             </LinearLayout>
 
@@ -183,7 +222,7 @@
                     android:layout_height="19dp"
                     android:layout_weight="0"
                     android:max="5000"
-                    android:progress="100"/>
+                    android:progress="100" />
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

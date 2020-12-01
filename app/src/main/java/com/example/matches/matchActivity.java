@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,8 +19,8 @@ public class matchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matchs);
-        //disconnectButton = findViewById(R.id.disconnectButton);
-       //profilButton = findViewById(R.id.profilButton);
+        disconnectButton = findViewById(R.id.disconnectButton);
+        profilButton = findViewById(R.id.profilButton);
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         userId = firebaseAuth.getCurrentUser().getUid();

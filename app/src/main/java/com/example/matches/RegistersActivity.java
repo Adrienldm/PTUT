@@ -6,10 +6,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,15 +28,19 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -42,7 +48,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class RegistersActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -50,7 +58,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     Button register, photo;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
-    String userID;
+    String userID, departement;
     public Uri imageUri;
     EditText nom, prenom, adresseMail, motDePasse, telephone, adresse, age, description;
     final static int SELECT_PICTURE = 1;
@@ -63,7 +71,8 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     private GoogleMap gMap;
     Circle circle;
     private ImageView img1;
-    private Data_Etu data_etu;
+    private RadioButton info, gb, tc, mmi;
+
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -77,7 +86,10 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-
+        info = (RadioButton) findViewById(R.id.info);
+        gb = (RadioButton) findViewById(R.id.gb);
+        tc = (RadioButton) findViewById(R.id.tc);
+        mmi = (RadioButton) findViewById(R.id.mmi);
         nom = (EditText) findViewById(R.id.nom);
         prenom = (EditText) findViewById(R.id.prenomE);
         adresseMail = (EditText) findViewById(R.id.mail);
@@ -113,6 +125,18 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                 final String adres = adresse.getText().toString().trim();
                 final String age2 = age.getText().toString().trim();
                 final String description2 = description.getText().toString().trim();
+
+                if (info.isSelected()) {
+                    departement = "info";
+                } else if (tc.isSelected()) {
+                    departement = "tc";
+                } else if (gb.isSelected()) {
+                    departement = "gb";
+                } else if (mmi.isSelected()) {
+                    departement = "mmi";
+                } else {
+                    mmi.setError("you must chose a case");
+                }
 
                 if (TextUtils.isEmpty(prenom2)) {
                     prenom.setError("Name is required");
@@ -150,11 +174,45 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                     motDePasse.setError("Password Must be >= 6 Caracters");
                     return;
                 }
+                //enregister un utilisateur avec un email et un mdp
+                firebaseAuth.createUserWithEmailAndPassword(email, motDP).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        //lui ajouter DES ATTIBUTS dans la firebase avec firebaseauth et son id
+                        if (task.isSuccessful()) {
+                            Toast.makeText(RegistersActivity.this, "User Created", Toast.LENGTH_SHORT).show();
+                            userID = firebaseAuth.getCurrentUser().getUid();
 
-                data_etu = new Data_Etu(email, motDP, nom2, prenom2, tel, adres, age2, description2, randomkey);
-                data_etu.createUser();
-                Toast.makeText(getApplicationContext(), "User Created", Toast.LENGTH_SHORT).show();
-                startregister2();
+
+                            DocumentReference documentReference = firestore.collection("etudiant").document(userID);
+                            Map<String, Object> user = new HashMap<>();
+                            user.put("nom_etudiant", nom2);
+                            user.put("prenom_etudiant", prenom2);
+                            user.put("email_etudiant", email);
+                            user.put("telephone_etudiant", tel);
+                            user.put("adresse_etudiant", adres);
+                            user.put("age_etudiant", age2);
+                            user.put("description_etudiant", description2);
+                            user.put("image_etudiant", randomkey);
+                            user.put("departement_etudiant", departement);
+                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("TAG", "OnSucces: user profile is created for" + userID);
+                                    startregister2();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("TAG", "OnFailure: " + e.toString());
+                                }
+                            });
+
+                        } else {
+                            Toast.makeText(RegistersActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
 
@@ -256,7 +314,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
 
 
     public void startregister2() {
-        Intent intent = new Intent(this, profil.class);
+        Intent intent = new Intent(this, matchActivity.class);
         startActivity(intent);
     }
 
@@ -332,4 +390,5 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         circle = gMap.addCircle(new CircleOptions().center(new LatLng(myPosition.latitude, myPosition.longitude)).strokeColor(Color.RED));
 
     }
+
 }
