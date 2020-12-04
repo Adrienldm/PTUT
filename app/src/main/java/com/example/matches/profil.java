@@ -1,10 +1,14 @@
 package com.example.matches;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,7 +33,7 @@ public class profil extends AppCompatActivity {
     String userId;
     FirebaseStorage storage;
     ImageView profilepic;
-
+    Button modif;
     String img;
 
     @Override
@@ -42,12 +46,13 @@ public class profil extends AppCompatActivity {
         adresse = (TextView) findViewById(R.id.textView4);
         description = (TextView) findViewById(R.id.textView6);
         profilepic = (ImageView) findViewById(R.id.profilepic);
-
+        modif = (Button) findViewById(R.id.modif);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
         userId = firebaseAuth.getCurrentUser().getUid();
+        Toast.makeText(getApplicationContext(), "image loading", Toast.LENGTH_LONG).show();
 
 
         DocumentReference documentReference = firestore.collection("etudiant").document(userId);
@@ -64,6 +69,18 @@ public class profil extends AppCompatActivity {
                 downLoadWithBytes();
             }
         });
+
+        modif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lauchModif();
+            }
+        });
+    }
+
+    public void lauchModif() {
+        Intent intent = new Intent(this, ModificationProfilEtudiant.class);
+        startActivity(intent);
     }
 
     public void downLoadWithBytes() {

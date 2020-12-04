@@ -99,7 +99,7 @@
             app:layout_constraintVertical_bias="0.891" />
 
         <TextView
-            android:id="@+id/register"
+            android:id="@+id/modifier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"

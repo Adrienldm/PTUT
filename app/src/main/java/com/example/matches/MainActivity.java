@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void startregister2() {
-        Intent intent = new Intent(this, profil.class);
+        Intent intent = new Intent(this, matchActivity.class);
         startActivity(intent);
     }
 
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         passwordTextView = (TextView) findViewById(R.id.passwordTextView);
         fAuth = FirebaseAuth.getInstance();
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        register = (TextView) findViewById(R.id.register);
+        register = (TextView) findViewById(R.id.modifier);
 
         //go to register page
 

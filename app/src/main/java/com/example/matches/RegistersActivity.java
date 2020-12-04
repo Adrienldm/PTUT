@@ -98,7 +98,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         adresse = (EditText) findViewById(R.id.adresse);
         initAutocompletion();
         age = (EditText) findViewById(R.id.age);
-        register = (Button) findViewById(R.id.register);
+        register = (Button) findViewById(R.id.modifier);
 
         description = (EditText) findViewById(R.id.desc);
         distanceSeekBar = (SeekBar) findViewById(R.id.distanceSeekBar);
@@ -108,6 +108,30 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onClick(View view) {
                 choosePicture();
+            }
+        });
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                departement = "info";
+            }
+        });
+        tc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                departement = "tc";
+            }
+        });
+        mmi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                departement = "mmi";
+            }
+        });
+        gb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                departement = "gb";
             }
         });
 
@@ -126,18 +150,10 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                 final String age2 = age.getText().toString().trim();
                 final String description2 = description.getText().toString().trim();
 
-                if (info.isSelected()) {
-                    departement = "info";
-                } else if (tc.isSelected()) {
-                    departement = "tc";
-                } else if (gb.isSelected()) {
-                    departement = "gb";
-                } else if (mmi.isSelected()) {
-                    departement = "mmi";
-                } else {
+
+                if (departement == null) {
                     mmi.setError("you must chose a case");
                 }
-
                 if (TextUtils.isEmpty(prenom2)) {
                     prenom.setError("Name is required");
                     return;

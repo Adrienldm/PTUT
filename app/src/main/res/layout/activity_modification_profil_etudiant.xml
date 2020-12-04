@@ -27,7 +27,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
-                android:text="Creation du compte"
+                android:text="Modification du profil"
                 android:textSize="45sp"
                 android:textStyle="bold" />
 
@@ -98,14 +98,6 @@
                     android:layout_height="49dp"
                     android:layout_marginTop="16dp"
                     android:hint="Adresse postale"
-                    app:boxBackgroundMode="none" />
-
-                <EditText
-                    android:id="@+id/MDP"
-                    android:layout_width="257dp"
-                    android:layout_height="49dp"
-                    android:layout_marginTop="16dp"
-                    android:hint="Mot de passe"
                     app:boxBackgroundMode="none" />
 
                 <EditText
@@ -234,7 +226,7 @@
                     android:layout_width="107dp"
                     android:layout_height="44dp"
                     android:background="@drawable/custombutton"
-                    android:text="s'inscrire"
+                    android:text="Modifier"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
