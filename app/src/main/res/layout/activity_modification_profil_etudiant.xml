@@ -167,7 +167,7 @@
 
 
                     <Button
-                        android:id="@+id/button4"
+                        android:id="@+id/cvButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="7dp"
@@ -176,19 +176,19 @@
                         android:background="@drawable/custombutton"
                         android:text="CV"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/button5"
+                        app:layout_constraintEnd_toStartOf="@+id/motivButton"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
-                        android:id="@+id/button5"
+                        android:id="@+id/motivButton"
                         android:layout_width="173dp"
                         android:layout_height="46dp"
                         android:background="@drawable/custombutton"
                         android:text="Lettre de motivation"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/button4"
+                        app:layout_constraintStart_toEndOf="@+id/cvButton"
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

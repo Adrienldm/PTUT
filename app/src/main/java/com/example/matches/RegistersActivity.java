@@ -40,6 +40,8 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -55,7 +57,9 @@ import java.util.UUID;
 
 public class RegistersActivity extends AppCompatActivity implements OnMapReadyCallback {
     final String randomkey = UUID.randomUUID().toString();
-    Button register, photo;
+    final String randomPDFkey = UUID.randomUUID().toString();
+    //final String randomPDFkey2 = UUID.randomUUID().toString();
+    Button register, cvButton, motivButton;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
     String userID, departement;
@@ -63,6 +67,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     EditText nom, prenom, adresseMail, motDePasse, telephone, adresse, age, description;
     final static int SELECT_PICTURE = 1;
     private StorageReference storageReference;
+    private DatabaseReference databaseReference;
     private FirebaseStorage storage;
     LatLng myPosition = new LatLng(0, 0);
     private SeekBar distanceSeekBar;
@@ -85,7 +90,10 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference("uploads");
 
+        cvButton = (Button) findViewById(R.id.cvButton);
+        motivButton = (Button) findViewById(R.id.motivButton);
         info = (RadioButton) findViewById(R.id.info);
         gb = (RadioButton) findViewById(R.id.gb);
         tc = (RadioButton) findViewById(R.id.tc);
@@ -132,6 +140,13 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onClick(View view) {
                 departement = "gb";
+            }
+        });
+
+        cvButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectPDFFile();
             }
         });
 
@@ -211,6 +226,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                             user.put("description_etudiant", description2);
                             user.put("image_etudiant", randomkey);
                             user.put("departement_etudiant", departement);
+                            user.put("cv_etudiant", randomPDFkey + ".pdf");
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -266,6 +282,13 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
 
+    }
+
+    private void selectPDFFile() {
+        Intent intent = new Intent();
+        intent.setType("application/pdf");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select PDF File"), 2);
     }
 
     private void choosePicture() {
@@ -324,8 +347,35 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
             imageUri = data.getData();
             img1.setImageURI(imageUri);
             uploadPicture();
+        } else if (requestCode == 2 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            uploadPDFFile(data.getData());
         }
 
+    }
+
+    private void uploadPDFFile(Uri data) {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("uploading ...");
+        progressDialog.show();
+        StorageReference reference = storageReference.child("uploads/" + System.currentTimeMillis() + ".pdf");
+        reference.putFile(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
+                while (!uri.isComplete()) ;
+                Uri url = uri.getResult();
+                uploadPDF uploadPDF = new uploadPDF(randomPDFkey, url.toString());
+                databaseReference.child(databaseReference.push().getKey()).setValue(uploadPDF);
+                Toast.makeText(getApplicationContext(), "File Uploaded", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                progressDialog.setMessage("Uploaded " + (int) progress);
+            }
+        });
     }
 
 
