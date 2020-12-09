@@ -56,6 +56,8 @@ public class StageCreationActivity extends AppCompatActivity {
         descStageEditText = (EditText) findViewById(R.id.descStageEditText);
         competencesEditTextMultiLine = (EditText) findViewById(R.id.competencesEditTextMultiLine);
         stageButton = (Button) findViewById(R.id.stageButton);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
         stageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +100,7 @@ public class StageCreationActivity extends AppCompatActivity {
                 user.put("dateDebut", dateDebut);
                 user.put("dateFin", datefin);
                 user.put("descriptionStage", descStage);
-                user.put("idEntreprise", "test");
+                user.put("idEntreprise", userID);
 
 
                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener() {
