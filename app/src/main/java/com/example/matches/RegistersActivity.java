@@ -69,7 +69,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private FirebaseStorage storage;
-    LatLng myPosition = new LatLng(0, 0);
+    LatLng myPosition = new LatLng(48.0667 , -0.7667);
     private SeekBar distanceSeekBar;
     private TextView distanceTextView;
     private MapView mapView;
@@ -340,6 +340,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
             Place place = Autocomplete.getPlaceFromIntent(data);
             myPosition = place.getLatLng();
             adresse.setText(place.getAddress());
+           newPlace(myPosition);
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -395,6 +396,8 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                         Place.Field.LAT_LNG, Place.Field.NAME);
                 Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(getApplicationContext());
                 startActivityForResult(intent, 100);
+
+
             }
         });
 
@@ -447,14 +450,19 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
         gMap.setMinZoomPreference(12);
-        gMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
+       newPlace(myPosition);
 
+    }
+
+    public void newPlace(LatLng newPosition){
+        gMap.clear();
+        gMap.moveCamera(CameraUpdateFactory.newLatLng(newPosition));
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(myPosition);
+        markerOptions.position(newPosition);
+
         gMap.addMarker(markerOptions);
 
-        circle = gMap.addCircle(new CircleOptions().center(new LatLng(myPosition.latitude, myPosition.longitude)).strokeColor(Color.RED));
-
+        circle = gMap.addCircle(new CircleOptions().center(new LatLng(newPosition.latitude, newPosition.longitude)).strokeColor(Color.RED));
     }
 
 }
