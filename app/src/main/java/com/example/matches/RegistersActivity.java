@@ -58,7 +58,7 @@ import java.util.UUID;
 public class RegistersActivity extends AppCompatActivity implements OnMapReadyCallback {
     final String randomkey = UUID.randomUUID().toString();
     final String randomPDFkey = UUID.randomUUID().toString();
-    //final String randomPDFkey2 = UUID.randomUUID().toString();
+    final String randomPDFkey2 = UUID.randomUUID().toString();
     Button register, cvButton, motivButton;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
@@ -77,6 +77,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     Circle circle;
     private ImageView img1;
     private RadioButton info, gb, tc, mmi;
+    private int i = 0;
 
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -146,6 +147,15 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         cvButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                i = 1;
+                selectPDFFile();
+            }
+        });
+
+        motivButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                i = 2;
                 selectPDFFile();
             }
         });
@@ -227,6 +237,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                             user.put("image_etudiant", randomkey);
                             user.put("departement_etudiant", departement);
                             user.put("cv_etudiant", randomPDFkey + ".pdf");
+                            user.put("motiv_etudiant", randomPDFkey2 + ".pdf");
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -355,6 +366,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void uploadPDFFile(Uri data) {
+        String name;
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("uploading ...");
         progressDialog.show();
@@ -365,7 +377,10 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                 Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
                 while (!uri.isComplete()) ;
                 Uri url = uri.getResult();
-                uploadPDF uploadPDF = new uploadPDF(randomPDFkey, url.toString());
+                String name = null;
+                if (i == 1) name = randomPDFkey;
+                else if (i == 2) name = randomPDFkey;
+                uploadPDF uploadPDF = new uploadPDF(name, url.toString());
                 databaseReference.child(databaseReference.push().getKey()).setValue(uploadPDF);
                 Toast.makeText(getApplicationContext(), "File Uploaded", Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
