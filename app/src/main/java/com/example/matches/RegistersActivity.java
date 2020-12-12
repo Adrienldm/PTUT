@@ -264,7 +264,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                progressChangedValue = i;
+                progressChangedValue = i * (i / 140);
                 int value = (progressChangedValue * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
                 distanceTextView.setText("" + progressChangedValue);
                 distanceTextView.setX(seekBar.getX() + value + seekBar.getThumbOffset() / 2 - 10);
@@ -464,8 +464,8 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
-        gMap.setMinZoomPreference(12);
-       newPlace(myPosition);
+        gMap.setMinZoomPreference(7);
+        newPlace(myPosition);
 
     }
 
