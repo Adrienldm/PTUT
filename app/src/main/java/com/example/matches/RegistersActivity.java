@@ -268,8 +268,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                 progressChangedValue = i * (i / 140);
                 int value = (progressChangedValue * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
                 distanceTextView.setText("" + progressChangedValue);
-                distanceTextView.setX(seekBar.getX() + value + seekBar.getThumbOffset() / 2 - 10);
-                distanceTextView.setY(seekBar.getY());
+
                 circle.setRadius(progressChangedValue);
             }
 

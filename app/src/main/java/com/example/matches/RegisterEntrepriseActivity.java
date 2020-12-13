@@ -36,7 +36,7 @@ import java.util.Map;
 
 public class RegisterEntrepriseActivity extends AppCompatActivity {
     EditText nom, prenom, adresseMail, motDePasse, telephone, adresse;
-    Button register, stage;
+    Button register;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
     String userID;
@@ -52,7 +52,6 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
         telephone = (EditText) findViewById(R.id.telE);
         adresse = (EditText) findViewById(R.id.adresseE);
         register = (Button) findViewById(R.id.registerE);
-        stage = (Button) findViewById(R.id.stage);
 
         initAutocompletion();
 
@@ -136,12 +135,6 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
             }
         });
 
-        stage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startStage();
-            }
-        });
     }
 
     public void startregister2() {
@@ -149,10 +142,6 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void startStage(){
-        Intent intent = new Intent(this, StageCreationActivity.class);
-        startActivity(intent);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

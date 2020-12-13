@@ -104,15 +104,4 @@
         android:background="@drawable/custombutton"
         app:layout_constraintVertical_bias="0.951" />
 
-    <Button
-        android:id="@+id/stage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="stage"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/registerE"
-        app:layout_constraintHorizontal_bias="0.33"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adresseE"
-        app:layout_constraintVertical_bias="0.814" />
 </androidx.constraintlayout.widget.ConstraintLayout>

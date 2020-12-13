@@ -90,9 +90,8 @@ public class StageCreationActivity extends AppCompatActivity {
                 }
 
                 //userID = firebaseAuth.getCurrentUser().getUid();
-                userID = "eRGQh2nhOqXI1wT5q5TwHsJn3kf1";
+                userID = firebaseAuth.getCurrentUser().getUid();
 
-                //collection path inncorect mais je sais pas pk adrien si tu peux aider
                 DocumentReference documentReference = firestore.collection("offreStage").document(userID);
                 Map<String, Object> user = new HashMap<>();
                 user.put("Titre", Titre);

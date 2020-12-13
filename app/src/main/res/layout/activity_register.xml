@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="2px"
+    android:paddingRight="2px"
     tools:context=".MainActivity">
 
     <androidx.core.widget.NestedScrollView
@@ -220,11 +222,16 @@
 
                 <SeekBar
                     android:id="@+id/distanceSeekBar"
-                    android:layout_width="355dp"
+                    android:layout_width="match_parent"
                     android:layout_height="19dp"
                     android:layout_weight="0"
                     android:max="5000"
                     android:progress="100" />
+
+                <TextView
+                    android:id="@+id/distanceTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -242,11 +249,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/distanceTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
