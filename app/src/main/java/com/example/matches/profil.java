@@ -3,6 +3,7 @@ package com.example.matches;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -32,9 +33,9 @@ public class profil extends AppCompatActivity {
     FirebaseFirestore firestore;
     String userId;
     FirebaseStorage storage;
-    ImageView profilepic;
-    Button modif;
-    String img;
+    ImageView profilepic, cv, motiv;
+    Button modif, retour;
+    String img, cvNom, motinNom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,9 @@ public class profil extends AppCompatActivity {
         description = (TextView) findViewById(R.id.textView6);
         profilepic = (ImageView) findViewById(R.id.profilepic);
         modif = (Button) findViewById(R.id.modif);
+        motiv = (ImageView) findViewById(R.id.motiv);
+        cv = (ImageView) findViewById(R.id.cv);
+        retour = (Button) findViewById(R.id.retour);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -66,6 +70,8 @@ public class profil extends AppCompatActivity {
                 adresse.setText(documentSnapshot.getString("adresse_etudiant"));
                 description.setText(documentSnapshot.getString("description_etudiant"));
                 img = documentSnapshot.getString("image_etudiant");
+                cvNom = documentSnapshot.getString("cv_etudiant");
+                motinNom = documentSnapshot.getString("motiv_etudiant");
                 downLoadWithBytes();
             }
         });
@@ -74,6 +80,32 @@ public class profil extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 lauchModif();
+            }
+        });
+
+        cv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent();
+                intent.setData(Uri.parse(cvNom));
+                startActivity(intent);
+            }
+        });
+        motiv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setData(Uri.parse(motinNom));
+                startActivity(intent);
+            }
+        });
+
+        retour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), matchActivity.class);
+                startActivity(intent);
             }
         });
     }

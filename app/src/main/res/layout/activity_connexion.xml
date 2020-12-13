@@ -54,6 +54,7 @@
                 android:contentDescription="Entrez votre indentifiant"
                 android:hint="Entrez votre identifiant"
                 android:paddingBottom="30dp"
+                android:inputType="textEmailAddress"
                 android:textSize="18sp" />
 
             <EditText

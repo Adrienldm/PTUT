@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
@@ -26,6 +27,8 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -52,9 +55,16 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
     FirebaseStorage storage;
     ImageView profilepic;
     String img;
+    final String randomPDFkey = UUID.randomUUID().toString();
     private StorageReference storageReference;
+    final String randomPDFkey2 = UUID.randomUUID().toString();
     private Button modififer;
     private RadioButton info, gb, tc, mmi;
+    Uri cvUrl, motivUrl;
+    private int i = 0;
+    private DatabaseReference databaseReference;
+    private Button cvButton, motivButton;
+    private String cvNom, motivNom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +84,8 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
         gb = (RadioButton) findViewById(R.id.gb);
         tc = (RadioButton) findViewById(R.id.tc);
         mmi = (RadioButton) findViewById(R.id.mmi);
+        cvButton = (Button) findViewById(R.id.cvButton);
+        motivButton = (Button) findViewById(R.id.motivButton);
 
 
         storage = FirebaseStorage.getInstance();
@@ -82,6 +94,7 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference("uploads");
 
         info.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,9 +148,14 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
                 description.setText(documentSnapshot.getString("description_etudiant"));
                 img = documentSnapshot.getString("image_etudiant");
                 departement = documentSnapshot.getString("departement_etudiant");
+                cvNom = documentSnapshot.getString("cv_etudiant");
+                motivNom = documentSnapshot.getString("motiv_etudiant");
                 downLoadWithBytes();
+                cvUrl = Uri.parse(cvNom);
+                motivUrl = Uri.parse(motivNom);
             }
         });
+
         modififer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,13 +168,30 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
                         "email_etudiant", mail.getText().toString().trim(),
                         "adresse_etudiant", adresse.getText().toString().trim(),
                         "description_etudiant", description.getText().toString().trim(),
-                        "image_etudiant", randomkey,
-                        "departement_etudiant", departement
+                        "image_etudiant", img,
+                        "departement_etudiant", departement,
+                        "cv_etudiant", cvUrl.toString(),
+                        "motiv_etudiant", motivUrl.toString()
                 );
                 retour();
             }
 
 
+        });
+        cvButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                i = 1;
+                selectPDFFile();
+            }
+        });
+
+        motivButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                i = 2;
+                selectPDFFile();
+            }
         });
     }
 
@@ -174,8 +209,45 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
             imageUri = data.getData();
             profilepic.setImageURI(imageUri);
             uploadPicture();
+        } else if (requestCode == 2 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            uploadPDFFile(data.getData());
         }
 
+    }
+
+    private void uploadPDFFile(Uri data) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("uploading ...");
+        progressDialog.show();
+        StorageReference reference = storageReference.child("uploads/" + System.currentTimeMillis() + ".pdf");
+        reference.putFile(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
+                while (!uri.isComplete()) ;
+                Uri url = uri.getResult();
+
+                String name = null;
+                if (i == 1) {
+                    name = randomPDFkey;
+                    cvUrl = url;
+                } else if (i == 2) {
+                    name = randomPDFkey;
+                    motivUrl = url;
+                }
+                uploadPDF uploadPDF = new uploadPDF(name, url.toString());
+                databaseReference.child(databaseReference.push().getKey()).setValue(uploadPDF);
+                Toast.makeText(getApplicationContext(), "File Uploaded", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                progressDialog.setMessage("Uploaded " + (int) progress);
+            }
+        });
     }
 
 
@@ -195,6 +267,7 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
 
 
         StorageReference riversRef = storageReference.child("images/" + randomkey);
+        img = randomkey;
 
         riversRef.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -250,6 +323,13 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
         });
 
 
+    }
+
+    private void selectPDFFile() {
+        Intent intent = new Intent();
+        intent.setType("application/pdf");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select PDF File"), 2);
     }
 
     private void retour() {

@@ -90,6 +90,7 @@
                     android:layout_height="49dp"
                     android:layout_marginTop="16dp"
                     android:hint="Adresse mail"
+                    android:inputType="textEmailAddress"
                     app:boxBackgroundMode="none" />
 
                 <EditText
@@ -114,6 +115,7 @@
                     android:layout_height="49dp"
                     android:layout_marginTop="16dp"
                     android:hint="Téléphone"
+                    android:inputType="phone"
                     app:boxBackgroundMode="none" />
 
                 <RadioGroup

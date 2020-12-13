@@ -69,7 +69,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private FirebaseStorage storage;
-    LatLng myPosition = new LatLng(48.0667 , -0.7667);
+    LatLng myPosition = new LatLng(48.0667, -0.7667);
     private SeekBar distanceSeekBar;
     private TextView distanceTextView;
     private MapView mapView;
@@ -78,6 +78,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     private ImageView img1;
     private RadioButton info, gb, tc, mmi;
     private int i = 0;
+    Uri cvUrl, motivUrl;
 
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -236,8 +237,8 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                             user.put("description_etudiant", description2);
                             user.put("image_etudiant", randomkey);
                             user.put("departement_etudiant", departement);
-                            user.put("cv_etudiant", randomPDFkey + ".pdf");
-                            user.put("motiv_etudiant", randomPDFkey2 + ".pdf");
+                            user.put("cv_etudiant", cvUrl.toString());
+                            user.put("motiv_etudiant", motivUrl.toString());
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -366,7 +367,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void uploadPDFFile(Uri data) {
-        String name;
+
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("uploading ...");
         progressDialog.show();
@@ -377,9 +378,15 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                 Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
                 while (!uri.isComplete()) ;
                 Uri url = uri.getResult();
+
                 String name = null;
-                if (i == 1) name = randomPDFkey;
-                else if (i == 2) name = randomPDFkey;
+                if (i == 1) {
+                    name = randomPDFkey;
+                    cvUrl = url;
+                } else if (i == 2) {
+                    name = randomPDFkey;
+                    motivUrl = url;
+                }
                 uploadPDF uploadPDF = new uploadPDF(name, url.toString());
                 databaseReference.child(databaseReference.push().getKey()).setValue(uploadPDF);
                 Toast.makeText(getApplicationContext(), "File Uploaded", Toast.LENGTH_LONG).show();
