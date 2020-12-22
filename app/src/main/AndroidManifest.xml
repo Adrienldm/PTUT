@@ -11,19 +11,39 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ModificationProfilEtudiant"></activity>
+        <activity android:name=".ModificationProfilEnterprise"></activity>
+        <activity
+            android:name=".Profil_Entreprise"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ModificationProfilEtudiant"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCX0Jmta-vEleEiNafBqSFax8IYg6kL0tM" />
 
-        <activity android:name=".profil" />
-        <activity android:name=".RegisterEntrepriseActivity" />
-        <activity android:name=".EntrepriseOuEtudiant" />
-        <activity android:name=".RegistersActivity" />
-        <activity android:name=".matchActivity" />
-        <activity android:name=".StageCreationActivity"/>
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".profil"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RegisterEntrepriseActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EntrepriseOuEtudiant"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RegistersActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".matchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".StageCreationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

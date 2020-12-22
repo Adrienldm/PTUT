@@ -1,14 +1,15 @@
 package com.example.matches;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,53 +25,72 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class RegisterEntrepriseActivity extends AppCompatActivity {
-    EditText nom, prenom, adresseMail, motDePasse, telephone, adresse;
+    final String randomkey = UUID.randomUUID().toString();
     Button register;
     FirebaseAuth firebaseAuth;
+    public Uri imageUri;
+    EditText nom, adresseMail, motDePasse, telephone, adresse;
     FirebaseFirestore firestore;
     String userID;
+    private StorageReference storageReference;
+    private DatabaseReference databaseReference;
+    private ImageView img1;
+    private FirebaseStorage storage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_entreprise);
 
+        img1 = (ImageView) findViewById(R.id.image1);
         nom = (EditText) findViewById(R.id.nomE);
-        prenom = (EditText) findViewById(R.id.prenomE);
         adresseMail = (EditText) findViewById(R.id.mailE);
         motDePasse = (EditText) findViewById(R.id.MDPE);
         telephone = (EditText) findViewById(R.id.telE);
         adresse = (EditText) findViewById(R.id.adresseE);
-        register = (Button) findViewById(R.id.registerE);
+        register = (Button) findViewById(R.id.modif);
 
         initAutocompletion();
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference("uploads");
+
+        img1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                choosePicture();
+            }
+        });
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String email = adresseMail.getText().toString().trim();
                 String motDP = motDePasse.getText().toString().trim();
                 final String nom2 = nom.getText().toString().trim();
-                final String prenom2 = prenom.getText().toString().trim();
                 final String tel = telephone.getText().toString().trim();
                 final String adres = adresse.getText().toString().trim();
-
-                if (TextUtils.isEmpty(prenom2)) {
-                    prenom.setError("Name is required");
-                    return;
-                }
 
                 if (TextUtils.isEmpty(nom2)) {
                     nom.setError("Name is required");
@@ -106,13 +126,13 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(RegisterEntrepriseActivity.this, "User Created", Toast.LENGTH_SHORT).show();
                             userID = firebaseAuth.getCurrentUser().getUid();
-                            DocumentReference documentReference = firestore.collection("users").document(userID);
+                            DocumentReference documentReference = firestore.collection("entreprise").document(userID);
                             Map<String, Object> user = new HashMap<>();
                             user.put("nom_entreprise", nom2);
-                            user.put("prenom_entreprise", prenom2);
                             user.put("email_entreprise", email);
                             user.put("telephone_entreprise", tel);
                             user.put("adresse_entreprise", adres);
+                            user.put("image_entreprise", randomkey);
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -137,6 +157,13 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
 
     }
 
+    private void choosePicture() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, 1);
+    }
+
     public void startregister2() {
         Intent intent = new Intent(this, matchActivity.class);
         startActivity(intent);
@@ -149,12 +176,49 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == 100) {
             Place place = Autocomplete.getPlaceFromIntent(data);
             adresse.setText(place.getAddress());
-        }
-        else if (resultCode == AutocompleteActivity.RESULT_ERROR){
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
+        } else if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            img1.setImageURI(imageUri);
+            uploadPicture();
         }
     }
+
+    private void uploadPicture() {
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setTitle("Uploading Image...");
+        pd.setCancelable(false);
+        pd.show();
+
+
+        StorageReference riversRef = storageReference.child("images/" + randomkey);
+
+        riversRef.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        pd.dismiss();
+                        Snackbar.make(findViewById(android.R.id.content), "Image Uploaded.", Snackbar.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        pd.dismiss();
+                        Toast.makeText(getApplicationContext(), "Failed to upload", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progressPercent = (100.00 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        pd.setMessage("Percentage " + (int) progressPercent + "%");
+                    }
+                });
+    }
+
     protected void initAutocompletion() {
         // autocompletion
         Places.initialize(getApplicationContext(), "AIzaSyDA6Tx1FjGwf_joDz7L12GyKi1nK8NC21s");

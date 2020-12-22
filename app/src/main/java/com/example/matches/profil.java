@@ -28,10 +28,10 @@ import java.text.MessageFormat;
 import javax.annotation.Nullable;
 
 public class profil extends AppCompatActivity {
-    TextView NomAge, tel, mail, adresse, description;
+    TextView NomAge, tel, mail, adresse, description, departement;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
-    String userId;
+    String userId, depar;
     FirebaseStorage storage;
     ImageView profilepic, cv, motiv;
     Button modif, retour;
@@ -51,6 +51,7 @@ public class profil extends AppCompatActivity {
         motiv = (ImageView) findViewById(R.id.motiv);
         cv = (ImageView) findViewById(R.id.cv);
         retour = (Button) findViewById(R.id.retour);
+        departement = (TextView) findViewById(R.id.dep);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -72,6 +73,23 @@ public class profil extends AppCompatActivity {
                 img = documentSnapshot.getString("image_etudiant");
                 cvNom = documentSnapshot.getString("cv_etudiant");
                 motinNom = documentSnapshot.getString("motiv_etudiant");
+                depar = documentSnapshot.getString("departement_etudiant");
+                switch (depar) {
+                    case "info":
+                        departement.setText("IUT informatique de laval");
+                        break;
+                    case "gb":
+                        departement.setText("IUT génie biologique de Laval");
+                        break;
+                    case "mmi":
+                        departement.setText("IUT Métier du multimédia et de l'informatique de laval");
+                        break;
+                    case "tc":
+                        departement.setText("IUT Technique de commercialisation de Laval");
+                        break;
+                    default:
+                        departement.setText("erreur bug doit être corriger ");
+                }
                 downLoadWithBytes();
             }
         });
