@@ -121,7 +121,7 @@ public class StageCreationActivity extends AppCompatActivity {
 
 
     public void startregister2() {
-        Intent intent = new Intent(this , matchActivity.class);
+        Intent intent = new Intent(this , MatchActivity.class);
         startActivity(intent);
     }
 

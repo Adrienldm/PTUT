@@ -72,7 +72,7 @@ public class Profil_Entreprise extends AppCompatActivity {
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), matchActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MatchActivity.class);
                 startActivity(intent);
             }
         });

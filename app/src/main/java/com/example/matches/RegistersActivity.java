@@ -402,7 +402,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
 
 
     public void startregister2() {
-        Intent intent = new Intent(this, matchActivity.class);
+        Intent intent = new Intent(this, MatchActivity.class);
         startActivity(intent);
     }
 

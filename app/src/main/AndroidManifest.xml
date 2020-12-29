@@ -36,7 +36,7 @@
             android:name=".RegistersActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".matchActivity"
+            android:name=".MatchActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".StageCreationActivity"
