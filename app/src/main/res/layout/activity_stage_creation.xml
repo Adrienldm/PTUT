@@ -27,8 +27,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="208dp"
+            android:layout_height="444dp"
             android:orientation="vertical">
 
             <EditText
@@ -77,10 +77,49 @@
                 android:layout_height="40dp"
                 android:text="Choix du departement de l'étudiant" />
 
-            <Spinner
-                android:id="@+id/snipperDptVise"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RadioGroup
+                    android:id="@+id/oui"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RadioButton
+                        android:id="@+id/info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Département informatique"
+                        android:textColor="@android:color/secondary_text_light"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/gb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Département génie biologique"
+                        android:textColor="@android:color/secondary_text_light"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/tc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Département technique de commercialisation"
+                        android:textColor="@android:color/secondary_text_light"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/mmi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Département métier du multimédia et de l'informatique"
+                        android:textColor="@android:color/secondary_text_light"
+                        android:textSize="18sp" />
+                </RadioGroup>
+            </LinearLayout>
 
         </LinearLayout>
 
