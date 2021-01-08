@@ -12,8 +12,6 @@ import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.mindorks.placeholderview.annotations.Layout;
 import com.mindorks.placeholderview.annotations.Resolve;
 import com.mindorks.placeholderview.annotations.View;
-import com.mindorks.placeholderview.annotations.swipe.SwipeIn;
-import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 
 @Layout(R.layout.profil_card)
 public class ProfilCard {
@@ -41,7 +39,6 @@ public class ProfilCard {
 
     @Resolve
     private void onResolved(){
-        profileImageView.setImageBitmap(image);
         nameAgeTxt.setText(profil.getNom() + ", " + profil.getAge());
         locationNameTxt.setText(profil.getLocalisation());
     }
@@ -51,12 +48,15 @@ public class ProfilCard {
     public void downLoadWithBytes() {
         // Create a storage reference from our app
         FirebaseStorage storage = FirebaseStorage.getInstance();
+
         StorageReference storageRef = storage.getReference().child("images").child("" + profil.getImageProfil());
         storageRef.getBytes(1920 * 1080 * 5).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                image = bitmap;
+                if (bitmap != null) {
+                    profileImageView.setImageBitmap(bitmap);
+                }
             }
         });
     }

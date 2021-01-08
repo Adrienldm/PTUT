@@ -51,13 +51,7 @@ public class MatchActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        mSwipeView.getBuilder()
-                .setDisplayViewCount(3)
-                .setSwipeDecor(new SwipeDecor()
-                        .setPaddingTop(20)
-                        .setRelativeScale(0.01f)
-                        .setSwipeInMsgLayoutId(R.layout.swipe_view_like)
-                        .setSwipeOutMsgLayoutId(R.layout.swipe_view_dislike));
+
 
         final DocumentReference documentReference = firestore.collection("entreprise").document(userId);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -77,6 +71,8 @@ public class MatchActivity extends AppCompatActivity {
                                             Log.e("Test", "tesr");
                                             profil = new ContentProfil(document.getString("nom_entreprise"), document.getString("adresse_entreprise"), document.getString("image_entreprise"));
                                             mSwipeView.addView(new ProfilCard(profil, mSwipeView));
+
+
                                         }
                                     } else {
                                         Log.d("e", "Error getting documents: ", task.getException());
@@ -104,6 +100,13 @@ public class MatchActivity extends AppCompatActivity {
                 }
             }
         });
+        mSwipeView.getBuilder()
+                .setDisplayViewCount(3)
+                .setSwipeDecor(new SwipeDecor()
+                        .setPaddingTop(20)
+                        .setRelativeScale(0.01f)
+                        .setSwipeInMsgLayoutId(R.layout.swipe_view_like)
+                        .setSwipeOutMsgLayoutId(R.layout.swipe_view_dislike));
 
 
         findViewById(R.id.dislikeButton).setOnClickListener(new View.OnClickListener() {
