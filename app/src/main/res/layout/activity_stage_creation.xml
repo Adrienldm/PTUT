@@ -71,6 +71,12 @@
                 android:hint="date de fin du stage"
                 android:inputType="date" />
 
+            <TextView
+                android:id="@+id/text12042"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="Choix du departement de l'étudiant" />
+
             <Spinner
                 android:id="@+id/snipperDptVise"
                 android:layout_width="match_parent"
