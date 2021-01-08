@@ -123,7 +123,7 @@ public class profil extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MatchActivity.class);
-                intent.putExtra("typeUser", "etudiant");
+
                 startActivity(intent);
             }
         });

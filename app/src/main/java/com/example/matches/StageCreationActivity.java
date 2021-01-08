@@ -151,36 +151,9 @@ public class StageCreationActivity extends AppCompatActivity {
 
     public void startregister2() {
         Intent intent = new Intent(this , MatchActivity.class);
-        intent.putExtra("typeUser", "entreprise");
+
         startActivity(intent);
     }
 
-
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == 100) {
-            Place place = Autocomplete.getPlaceFromIntent(data);
-            adresse.setText(place.getAddress());
-        }
-        else if (resultCode == AutocompleteActivity.RESULT_ERROR){
-            Status status = Autocomplete.getStatusFromIntent(data);
-            Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-    protected void initAutocompletion() {
-        // autocompletion
-        Places.initialize(getApplicationContext(), "AIzaSyDA6Tx1FjGwf_joDz7L12GyKi1nK8NC21s");
-        adresse.setFocusable(false);
-        adresse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
-                        Place.Field.LAT_LNG, Place.Field.NAME);
-                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(getApplicationContext());
-                startActivityForResult(intent, 100);
-            }
-        });
-    }*/
 
 }

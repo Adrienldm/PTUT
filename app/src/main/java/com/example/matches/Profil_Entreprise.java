@@ -73,7 +73,7 @@ public class Profil_Entreprise extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MatchActivity.class);
-                intent.putExtra("typeUser", "entreprise");
+
                 startActivity(intent);
             }
         });

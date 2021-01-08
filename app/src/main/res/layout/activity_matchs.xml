@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/custombutton"
                     android:text="Creer un stage"
-                    android:visibility="visible"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toStartOf="@+id/profilButton"
                     app:layout_constraintStart_toEndOf="@+id/disconnectButton"
                     tools:layout_editor_absoluteY="0dp" />
