@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
+import com.mindorks.placeholderview.annotations.Click;
 import com.mindorks.placeholderview.annotations.Layout;
 import com.mindorks.placeholderview.annotations.Resolve;
 import com.mindorks.placeholderview.annotations.View;
@@ -26,23 +27,31 @@ public class ProfilCard {
     private TextView locationNameTxt;
 
     private final ContentProfil profil;
+
     private SwipePlaceHolderView mSwipeView;
     private Bitmap image;
     private int compteur;
+    MatchActivity matchActivity;
 
-    public ProfilCard(ContentProfil profil, SwipePlaceHolderView swipeView) {
+
+    public ProfilCard(ContentProfil profil, SwipePlaceHolderView swipeView, MatchActivity matchActivity2) {
         this.profil = profil;
         mSwipeView = swipeView;
         downLoadWithBytes();
         compteur = 0;
+        matchActivity = matchActivity2;
     }
 
     @Resolve
-    private void onResolved(){
+    private void onResolved() {
         nameAgeTxt.setText(profil.getNom() + ", " + profil.getAge());
         locationNameTxt.setText(profil.getLocalisation());
     }
 
+    @Click(R.id.profileImageView)
+    public void onProfileImageViewClick() {
+        matchActivity.launch(profil.getId());
+    }
 
 
     public void downLoadWithBytes() {

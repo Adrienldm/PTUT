@@ -1,5 +1,6 @@
 package com.example.matches;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ public class MatchActivity extends AppCompatActivity {
     Button disconnectButton, profilButton, stage;
     SwipePlaceHolderView mSwipeView;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,8 +71,8 @@ public class MatchActivity extends AppCompatActivity {
                                         Log.e("Test1", "tesr");
                                         for (QueryDocumentSnapshot document : task.getResult()) {
                                             Log.e("Test", "tesr");
-                                            profil = new ContentProfil(document.getString("nom_entreprise"), document.getString("adresse_entreprise"), document.getString("image_entreprise"));
-                                            mSwipeView.addView(new ProfilCard(profil, mSwipeView));
+                                            profil = new ContentProfil(document.getString("nom_entreprise"), document.getString("adresse_entreprise"), document.getString("image_entreprise"), document.getId());
+                                            mSwipeView.addView(new ProfilCard(profil, mSwipeView, MatchActivity.this));
 
 
                                         }
@@ -89,8 +91,8 @@ public class MatchActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         ContentProfil profil;
                                         for (QueryDocumentSnapshot document : task.getResult()) {
-                                            profil = new ContentProfil(document.getString("nom_etudiant"), document.getString("age_etudiant"), document.getString("adresse_etudiant"), document.getString("image_etudiant"));
-                                            mSwipeView.addView(new ProfilCard(profil, mSwipeView));
+                                            profil = new ContentProfil(document.getString("nom_etudiant"), document.getString("age_etudiant"), document.getString("adresse_etudiant"), document.getString("image_etudiant"), document.getId());
+                                            mSwipeView.addView(new ProfilCard(profil, mSwipeView, MatchActivity.this));
                                         }
                                     } else {
                                         Log.d("e", "Error getting documents: ", task.getException());
@@ -144,9 +146,11 @@ public class MatchActivity extends AppCompatActivity {
                         String a = documentSnapshot.getString("nom_entreprise");
                         if (a != null) {
                             Intent intent = new Intent(getApplicationContext(), Profil_Entreprise.class);
+                            intent.putExtra("id", userId);
                             startActivity(intent);
                         } else {
                             Intent intent = new Intent(getApplicationContext(), profil.class);
+                            intent.putExtra("id", userId);
                             startActivity(intent);
                         }
 
@@ -161,6 +165,26 @@ public class MatchActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         FirebaseAuth.getInstance().signOut();
+    }
+
+    public void launch(final String id) {
+        final DocumentReference documentReference = firestore.collection("entreprise").document(userId);
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                String a = documentSnapshot.getString("nom_entreprise");
+                if (a != null) {
+                    Intent intent = new Intent(getApplicationContext(), profil.class);
+                    intent.putExtra("id", id);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), Profil_Entreprise.class);
+                    intent.putExtra("id", id);
+                    startActivity(intent);
+                }
+            }
+        });
+
     }
 
 }

@@ -35,7 +35,7 @@ public class profil extends AppCompatActivity {
     FirebaseStorage storage;
     ImageView profilepic, cv, motiv;
     Button modif, retour;
-    String img, cvNom, motinNom;
+    String img, cvNom, motinNom, id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +59,19 @@ public class profil extends AppCompatActivity {
         userId = firebaseAuth.getCurrentUser().getUid();
         Toast.makeText(getApplicationContext(), "image loading", Toast.LENGTH_LONG).show();
 
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            id = null;
+        } else {
+            id = extras.getString("id");
+        }
 
-        DocumentReference documentReference = firestore.collection("etudiant").document(userId);
+        if (!userId.equals(id)) {
+            modif.setVisibility(View.INVISIBLE);
+        }
+
+
+        DocumentReference documentReference = firestore.collection("etudiant").document(id);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -122,9 +133,7 @@ public class profil extends AppCompatActivity {
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MatchActivity.class);
-
-                startActivity(intent);
+                finish();
             }
         });
     }

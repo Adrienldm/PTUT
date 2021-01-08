@@ -5,6 +5,7 @@ public class ContentProfil {
     private String age;
     private String localisation;
     private String imageProfil;
+    private String id;
 
 
     public String getNom() {
@@ -12,7 +13,7 @@ public class ContentProfil {
     }
 
     public String getAge() {
-        if(age == null)
+        if (age == null)
             return "";
         else
             return age;
@@ -26,21 +27,27 @@ public class ContentProfil {
         return imageProfil;
     }
 
+    public ContentProfil(String nom, String age, String localisation, String imageProfil, String id) {
+        this.nom = nom;
+        this.age = age;
+        this.localisation = localisation;
+        this.imageProfil = imageProfil;
+        this.id = id;
+    }
+
     public void setNom(String nom) {
         this.nom = nom;
     }
 
 
-    public ContentProfil(String nom, String age, String localisation, String imageProfil) {
+    public ContentProfil(String nom, String localisation, String imageProfil, String id) {
         this.nom = nom;
-        this.age = age;
         this.localisation = localisation;
         this.imageProfil = imageProfil;
+        this.id = id;
     }
 
-    public ContentProfil(String nom, String localisation, String imageProfil) {
-        this.nom = nom;
-        this.localisation = localisation;
-        this.imageProfil = imageProfil;
+    public String getId() {
+        return id;
     }
 }

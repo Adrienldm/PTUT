@@ -1,6 +1,5 @@
 package com.example.matches;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -150,9 +149,7 @@ public class StageCreationActivity extends AppCompatActivity {
 
 
     public void startregister2() {
-        Intent intent = new Intent(this , MatchActivity.class);
-
-        startActivity(intent);
+        finish();
     }
 
 

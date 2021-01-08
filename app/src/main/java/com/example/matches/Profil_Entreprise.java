@@ -32,7 +32,7 @@ public class Profil_Entreprise extends AppCompatActivity {
     FirebaseStorage storage;
     ImageView profilepic;
     Button modif, retour;
-    String img;
+    String img, id;
 
 
     @Override
@@ -54,7 +54,18 @@ public class Profil_Entreprise extends AppCompatActivity {
         userId = firebaseAuth.getCurrentUser().getUid();
         Toast.makeText(getApplicationContext(), "image loading", Toast.LENGTH_LONG).show();
 
-        DocumentReference documentReference = firestore.collection("entreprise").document(userId);
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            id = null;
+        } else {
+            id = extras.getString("id");
+        }
+
+        if (!userId.equals(id)) {
+            modif.setVisibility(View.INVISIBLE);
+        }
+
+        DocumentReference documentReference = firestore.collection("entreprise").document(id);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -72,9 +83,7 @@ public class Profil_Entreprise extends AppCompatActivity {
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MatchActivity.class);
-
-                startActivity(intent);
+                finish();
             }
         });
 
