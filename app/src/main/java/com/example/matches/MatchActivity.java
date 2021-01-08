@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 public class MatchActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
-    String userId;
+    String userId, typeUser;
     Button disconnectButton, profilButton, stage;
     SwipePlaceHolderView mSwipeView;
 
@@ -35,6 +35,15 @@ public class MatchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matchs);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.get("typeUser") != null) {
+                typeUser = extras.getString("typeUser");
+            }
+        } else {
+            Log.e("Test1", "59546536549854235462428951352");
+        }
         String typeUser = getIntent().getStringExtra("typeUser");
 
         mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);

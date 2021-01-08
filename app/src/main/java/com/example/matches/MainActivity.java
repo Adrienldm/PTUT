@@ -26,7 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    //https://youtu.be/RiHGwJ_u27k
 
     public TextView identifiantTextView;
     public TextView passwordTextView;

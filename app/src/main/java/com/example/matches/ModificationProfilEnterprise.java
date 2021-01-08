@@ -219,6 +219,7 @@ public class ModificationProfilEnterprise extends AppCompatActivity {
 
     private void retour() {
         Intent intent = new Intent(this, Profil_Entreprise.class);
+
         startActivity(intent);
     }
 

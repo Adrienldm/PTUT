@@ -334,6 +334,7 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
 
     private void retour() {
         Intent intent = new Intent(this, profil.class);
+
         startActivity(intent);
     }
 }
