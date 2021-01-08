@@ -1,10 +1,13 @@
 package com.example.matches;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
@@ -17,8 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class StageCreationActivity extends AppCompatActivity {
 
@@ -32,6 +37,7 @@ public class StageCreationActivity extends AppCompatActivity {
     FirebaseFirestore firestore;
     String userID, departement;
     RadioButton info, gb, tc, mmi;
+    DatePickerDialog picker;
 
 
     @Override
@@ -75,6 +81,45 @@ public class StageCreationActivity extends AppCompatActivity {
                 departement = "gb";
             }
         });
+        dateStageDebutEditTextDate.setInputType(InputType.TYPE_NULL);
+        dateStageDebutEditTextDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                // date picker dialog
+                picker = new DatePickerDialog(StageCreationActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                dateStageDebutEditTextDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                            }
+                        }, year, month, day);
+                picker.show();
+            }
+        });
+
+        dateStageFinEditTextDate.setInputType(InputType.TYPE_NULL);
+        dateStageFinEditTextDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                // date picker dialog
+                picker = new DatePickerDialog(StageCreationActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                dateStageFinEditTextDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                            }
+                        }, year, month, day);
+                picker.show();
+            }
+        });
         stageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,13 +156,15 @@ public class StageCreationActivity extends AppCompatActivity {
                     return;
                 }
 
+                if (departement == null) {
+                    mmi.setError("you must chose a case");
+                    return;
+                }
 
 
-
-                //userID = firebaseAuth.getCurrentUser().getUid();
                 userID = firebaseAuth.getCurrentUser().getUid();
 
-                DocumentReference documentReference = firestore.collection("offreStage").document(userID);
+                DocumentReference documentReference = firestore.collection("offreStage").document(UUID.randomUUID().toString());
                 Map<String, Object> user = new HashMap<>();
                 user.put("Titre", Titre);
                 user.put("compétenceStage", competences);

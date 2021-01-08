@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -109,6 +110,23 @@ public class ModificationProfilEnterprise extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final DocumentReference documentReference2 = firestore.collection("entreprise").document(userId);
+
+                final String nom2 = Nom.getText().toString().trim();
+                final String tel2 = tel.getText().toString().trim();
+                final String adres = adresse.getText().toString().trim();
+
+                if (TextUtils.isEmpty(nom2)) {
+                    Nom.setError("Name is required");
+                    return;
+                }
+                if (TextUtils.isEmpty(tel2)) {
+                    tel.setError("Phone is required");
+                    return;
+                }
+                if (TextUtils.isEmpty(adres)) {
+                    adresse.setError("Adress is required");
+                    return;
+                }
                 documentReference2.update(
                         "nom_entreprise", Nom.getText().toString().trim(),
                         "telephone_entreprise", tel.getText().toString().trim(),

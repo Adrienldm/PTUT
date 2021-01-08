@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -160,6 +161,44 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final DocumentReference documentReference2 = firestore.collection("etudiant").document(userId);
+
+                final String email = mail.getText().toString().trim();
+                final String nom2 = Nom.getText().toString().trim();
+                final String prenom2 = Prenom.getText().toString().trim();
+                final String tel2 = tel.getText().toString().trim();
+                final String adres = adresse.getText().toString().trim();
+                final String age2 = Age.getText().toString().trim();
+                final String description2 = description.getText().toString().trim();
+
+                if (TextUtils.isEmpty(prenom2)) {
+                    Prenom.setError("Name is required");
+                    return;
+                }
+                if (TextUtils.isEmpty(nom2)) {
+                    Nom.setError("Name is required");
+                    return;
+                }
+                if (TextUtils.isEmpty(email)) {
+                    mail.setError("Email is required");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(tel2)) {
+                    tel.setError("Phone is required");
+                    return;
+                }
+                if (TextUtils.isEmpty(adres)) {
+                    adresse.setError("Adress is required");
+                    return;
+                }
+                if (TextUtils.isEmpty(age2)) {
+                    Age.setError("Age is required");
+                    return;
+                }
+                if (TextUtils.isEmpty(description2)) {
+                    description.setError("you need to add a description");
+                    return;
+                }
                 documentReference2.update(
                         "nom_etudiant", Nom.getText().toString().trim(),
                         "telephone_etudiant", tel.getText().toString().trim(),

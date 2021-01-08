@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -55,6 +56,8 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private ImageView img1;
     private FirebaseStorage storage;
+    boolean imageStop = false;
+    TextView textImageStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,7 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
         telephone = (EditText) findViewById(R.id.telE);
         adresse = (EditText) findViewById(R.id.adresseE);
         register = (Button) findViewById(R.id.modif);
+        textImageStop = (TextView) findViewById(R.id.parametreView3);
 
         initAutocompletion();
 
@@ -110,6 +114,10 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
                 }
                 if (TextUtils.isEmpty(adres)) {
                     adresse.setError("Adress is required");
+                    return;
+                }
+                if (imageStop == false) {
+                    textImageStop.setError("You must put an image");
                     return;
                 }
 
@@ -191,6 +199,7 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
         pd.setTitle("Uploading Image...");
         pd.setCancelable(false);
         pd.show();
+        imageStop = true;
 
 
         StorageReference riversRef = storageReference.child("images/" + randomkey);

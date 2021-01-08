@@ -79,6 +79,8 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     private RadioButton info, gb, tc, mmi;
     private int i = 0;
     Uri cvUrl, motivUrl;
+    boolean imageStop = false, pdfStop1 = false, pdfStop2 = false;
+    TextView textImageStop;
 
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -106,6 +108,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         motDePasse = (EditText) findViewById(R.id.MDP);
         telephone = (EditText) findViewById(R.id.tel);
         adresse = (EditText) findViewById(R.id.adresse);
+        textImageStop = (TextView) findViewById(R.id.parametreView3);
         initAutocompletion();
         age = (EditText) findViewById(R.id.age);
         register = (Button) findViewById(R.id.modifier);
@@ -216,6 +219,19 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                     motDePasse.setError("Password Must be >= 6 Caracters");
                     return;
                 }
+
+                if (!imageStop) {
+                    textImageStop.setError("you must put an image");
+                }
+
+                if (!pdfStop1) {
+                    cvButton.setError("you must put a cv");
+                }
+
+                if (!pdfStop2) {
+                    cvButton.setError("you must put a motivating letter");
+                }
+
                 //enregister un utilisateur avec un email et un mdp
                 firebaseAuth.createUserWithEmailAndPassword(email, motDP).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -315,7 +331,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         pd.setTitle("Uploading Image...");
         pd.setCancelable(false);
         pd.show();
-
+        imageStop = true;
 
         StorageReference riversRef = storageReference.child("images/" + randomkey);
 
@@ -382,9 +398,11 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
                 if (i == 1) {
                     name = randomPDFkey;
                     cvUrl = url;
+                    pdfStop1 = true;
                 } else if (i == 2) {
                     name = randomPDFkey;
                     motivUrl = url;
+                    pdfStop2 = true;
                 }
                 uploadPDF uploadPDF = new uploadPDF(name, url.toString());
                 databaseReference.child(databaseReference.push().getKey()).setValue(uploadPDF);
