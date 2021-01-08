@@ -28,7 +28,7 @@ public class MatchActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
     String userId;
-    Button disconnectButton, profilButton;
+    Button disconnectButton, profilButton, stage;
     SwipePlaceHolderView mSwipeView;
 
     @Override
@@ -39,11 +39,19 @@ public class MatchActivity extends AppCompatActivity {
 
         mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
 
+        stage = (Button) findViewById(R.id.stage);
         disconnectButton = findViewById(R.id.disconnectButton);
         profilButton = findViewById(R.id.profilButton);
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         userId = firebaseAuth.getCurrentUser().getUid();
+        stage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), StageCreationActivity.class);
+                startActivity(intent);
+            }
+        });
         mSwipeView.getBuilder()
                 .setDisplayViewCount(3)
                 .setSwipeDecor(new SwipeDecor()
@@ -52,7 +60,7 @@ public class MatchActivity extends AppCompatActivity {
                         .setSwipeInMsgLayoutId(R.layout.swipe_view_like)
                         .setSwipeOutMsgLayoutId(R.layout.swipe_view_dislike));
 
-        if(typeUser.equals("etudiant")){
+        if (typeUser.equals("etudiant")) {
             firestore.collection("entreprise")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -73,6 +81,7 @@ public class MatchActivity extends AppCompatActivity {
                     });
         }
         else{
+            stage.setVisibility(View.VISIBLE);
             firestore.collection("etudiant")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

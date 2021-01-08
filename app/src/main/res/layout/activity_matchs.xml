@@ -54,6 +54,17 @@
 
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/stage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custombutton"
+                    android:text="Creer un stage"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toStartOf="@+id/profilButton"
+                    app:layout_constraintStart_toEndOf="@+id/disconnectButton"
+                    tools:layout_editor_absoluteY="0dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
