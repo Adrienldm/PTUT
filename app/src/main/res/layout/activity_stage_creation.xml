@@ -71,6 +71,11 @@
                 android:hint="date de fin du stage"
                 android:inputType="date" />
 
+            <Spinner
+                android:id="@+id/snipperDptVise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -113,4 +118,5 @@
                 app:layout_constraintVertical_bias="0.919" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

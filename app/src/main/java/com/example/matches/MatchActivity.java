@@ -82,7 +82,6 @@ public class MatchActivity extends AppCompatActivity {
                                 ContentProfil profil;
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     profil = new ContentProfil(document.getString("nom_etudiant"), document.getString("age_etudiant"), document.getString("adresse_etudiant"), document.getString("image_etudiant"));
-                                    mSwipeView.removeAllViews();
                                     mSwipeView.addView(new ProfilCard(profil, mSwipeView));
                                 }
                             } else {

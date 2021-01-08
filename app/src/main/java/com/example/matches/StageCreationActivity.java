@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -40,6 +43,7 @@ public class StageCreationActivity extends AppCompatActivity {
     EditText descStageEditText;
     EditText competencesEditTextMultiLine;
     Button stageButton;
+    Spinner spinnerDptVise;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
     String userID;
@@ -55,6 +59,7 @@ public class StageCreationActivity extends AppCompatActivity {
         dateStageFinEditTextDate = (EditText) findViewById(R.id.dateStageFinEditTextDate);
         descStageEditText = (EditText) findViewById(R.id.descStageEditText);
         competencesEditTextMultiLine = (EditText) findViewById(R.id.competencesEditTextMultiLine);
+        spinnerDptVise = (Spinner) findViewById(R.id.snipperDptVise);
         stageButton = (Button) findViewById(R.id.stageButton);
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -66,6 +71,7 @@ public class StageCreationActivity extends AppCompatActivity {
                 final String datefin = dateStageFinEditTextDate.getText().toString().trim();
                 final String descStage = descStageEditText.getText().toString().trim();
                 final String competences = competencesEditTextMultiLine.getText().toString().trim();
+                final String dptVise = spinnerDptVise.getSelectedItem().toString();
 
                 if (TextUtils.isEmpty(Titre)) {
                     stageTitreEditText.setError("Title is required");
@@ -88,6 +94,18 @@ public class StageCreationActivity extends AppCompatActivity {
                     competencesEditTextMultiLine.setError("skills is required");
                     return;
                 }
+                if (TextUtils.isEmpty(dptVise)) {
+                    //Pour permettre de créer une erreur lorsque un département n'est pas choisi
+                    TextView errorText = (TextView) spinnerDptVise.getSelectedView();
+                    errorText.setError("");
+                    errorText.setText("Departement vise is required");
+                    return;
+                }
+
+                // permet d'ajouter des éléments au Spinner
+                String[] itemsSpinner = new String[]{"Informatique", "MMI", "TC", "Génie Biologie"};
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(),  android.R.layout.simple_spinner_dropdown_item, itemsSpinner);
+                spinnerDptVise.setAdapter(adapter);
 
                 //userID = firebaseAuth.getCurrentUser().getUid();
                 userID = firebaseAuth.getCurrentUser().getUid();
@@ -100,6 +118,7 @@ public class StageCreationActivity extends AppCompatActivity {
                 user.put("dateFin", datefin);
                 user.put("descriptionStage", descStage);
                 user.put("idEntreprise", userID);
+                user.put("Département choisi", dptVise);
 
 
                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener() {
