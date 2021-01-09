@@ -6,7 +6,26 @@ public class ContentProfil {
     private String localisation;
     private String imageProfil;
     private String id;
+    private String competence;
+    private String description;
 
+    public ContentProfil(String titre, String dateDebut, String dateFin, String image_entreprise, String compétenceStage, String descriptionStage, String idEntreprise) {
+        this.nom = titre;
+        this.age = dateDebut;
+        this.localisation = dateFin;
+        this.imageProfil = image_entreprise;
+        this.id = idEntreprise;
+        this.competence = compétenceStage;
+        this.description = descriptionStage;
+    }
+
+    public String getCompetence() {
+        return competence;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
     public String getNom() {
         return nom;

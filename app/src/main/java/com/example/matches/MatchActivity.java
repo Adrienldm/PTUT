@@ -1,6 +1,5 @@
 package com.example.matches;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,7 +31,7 @@ public class MatchActivity extends AppCompatActivity {
     Button disconnectButton, profilButton, stage;
     SwipePlaceHolderView mSwipeView;
 
-    @SuppressLint("ClickableViewAccessibility")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +48,8 @@ public class MatchActivity extends AppCompatActivity {
         stage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 Intent intent = new Intent(getApplicationContext(), StageCreationActivity.class);
                 startActivity(intent);
             }
@@ -61,7 +62,7 @@ public class MatchActivity extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot.getString("nom_entreprise") == null) {
 
-                    firestore.collection("entreprise")
+                    firestore.collection("offreStage")
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
@@ -71,7 +72,7 @@ public class MatchActivity extends AppCompatActivity {
                                         Log.e("Test1", "tesr");
                                         for (QueryDocumentSnapshot document : task.getResult()) {
                                             Log.e("Test", "tesr");
-                                            profil = new ContentProfil(document.getString("nom_entreprise"), document.getString("adresse_entreprise"), document.getString("image_entreprise"), document.getId());
+                                            profil = new ContentProfil(document.getString("Titre"), document.getString("dateDebut"), document.getString("dateFin"), document.getString("image_entreprise"), document.getString("compétenceStage"), document.getString("descriptionStage"), document.getString("idEntreprise"));
                                             mSwipeView.addView(new ProfilCard(profil, mSwipeView, MatchActivity.this));
 
 
@@ -167,7 +168,7 @@ public class MatchActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
     }
 
-    public void launch(final String id) {
+    public void launch(final String id, final ContentProfil profil) {
         final DocumentReference documentReference = firestore.collection("entreprise").document(userId);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -176,10 +177,16 @@ public class MatchActivity extends AppCompatActivity {
                 if (a != null) {
                     Intent intent = new Intent(getApplicationContext(), profil.class);
                     intent.putExtra("id", id);
+
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getApplicationContext(), Profil_Entreprise.class);
                     intent.putExtra("id", id);
+                    intent.putExtra("nomstage", profil.getNom());
+                    intent.putExtra("datedebut", profil.getAge());
+                    intent.putExtra("datefin", profil.getLocalisation());
+                    intent.putExtra("description", profil.getDescription());
+                    intent.putExtra("competence", profil.getCompetence());
                     startActivity(intent);
                 }
             }

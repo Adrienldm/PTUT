@@ -44,13 +44,20 @@ public class ProfilCard {
 
     @Resolve
     private void onResolved() {
-        nameAgeTxt.setText(profil.getNom() + ", " + profil.getAge());
-        locationNameTxt.setText(profil.getLocalisation());
+
+        if ((profil.getAge().length()) < 6) {
+            nameAgeTxt.setText(profil.getNom() + ", " + profil.getAge() + " ans");
+            locationNameTxt.setText(profil.getLocalisation());
+        } else {
+            nameAgeTxt.setText(profil.getNom());
+            locationNameTxt.setText(profil.getAge() + " au " + profil.getLocalisation());
+        }
+
     }
 
     @Click(R.id.profileImageView)
     public void onProfileImageViewClick() {
-        matchActivity.launch(profil.getId());
+        matchActivity.launch(profil.getId(), profil);
     }
 
 

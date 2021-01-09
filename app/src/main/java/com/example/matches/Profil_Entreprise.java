@@ -25,14 +25,14 @@ import com.google.firebase.storage.StorageReference;
 import javax.annotation.Nullable;
 
 public class Profil_Entreprise extends AppCompatActivity {
-    TextView Nom, tel, mail, adresse;
+    TextView Nom, tel, mail, adresse, titreText, date, descriptionText, competenceText;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
     String userId;
     FirebaseStorage storage;
     ImageView profilepic;
     Button modif, retour;
-    String img, id;
+    String img, id, titre, dateDebut, dateFin, description, competences;
 
 
     @Override
@@ -47,6 +47,10 @@ public class Profil_Entreprise extends AppCompatActivity {
         profilepic = (ImageView) findViewById(R.id.profilepic);
         modif = (Button) findViewById(R.id.modif);
         retour = (Button) findViewById(R.id.retour);
+        titreText = findViewById(R.id.titre);
+        date = findViewById(R.id.date);
+        descriptionText = findViewById(R.id.description);
+        competenceText = findViewById(R.id.competence);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -59,11 +63,21 @@ public class Profil_Entreprise extends AppCompatActivity {
             id = null;
         } else {
             id = extras.getString("id");
+            titre = extras.getString("nomStage");
+            dateDebut = extras.getString("datedebut");
+            dateFin = extras.getString("datefin");
+            description = extras.getString("description");
+            competences = extras.getString("competence");
         }
 
         if (!userId.equals(id)) {
             modif.setVisibility(View.INVISIBLE);
+            titreText.setText(titre);
+            date.setText("Stage du " + dateDebut + " au " + dateFin);
+            descriptionText.setText(description);
+            competenceText.setText(competences);
         }
+
 
         DocumentReference documentReference = firestore.collection("entreprise").document(id);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {

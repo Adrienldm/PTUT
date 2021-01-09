@@ -18,12 +18,17 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 public class StageCreationActivity extends AppCompatActivity {
 
@@ -35,7 +40,7 @@ public class StageCreationActivity extends AppCompatActivity {
     Button stageButton;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
-    String userID, departement;
+    String userID, departement, image;
     RadioButton info, gb, tc, mmi;
     DatePickerDialog picker;
 
@@ -120,6 +125,16 @@ public class StageCreationActivity extends AppCompatActivity {
                 picker.show();
             }
         });
+
+        userID = firebaseAuth.getCurrentUser().getUid();
+        final DocumentReference documentReference2 = firestore.collection("entreprise").document(userID);
+        documentReference2.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                image = documentSnapshot.getString("image_entreprise");
+            }
+        });
+
         stageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,8 +177,6 @@ public class StageCreationActivity extends AppCompatActivity {
                 }
 
 
-                userID = firebaseAuth.getCurrentUser().getUid();
-
                 DocumentReference documentReference = firestore.collection("offreStage").document(UUID.randomUUID().toString());
                 Map<String, Object> user = new HashMap<>();
                 user.put("Titre", Titre);
@@ -173,7 +186,7 @@ public class StageCreationActivity extends AppCompatActivity {
                 user.put("descriptionStage", descStage);
                 user.put("idEntreprise", userID);
                 user.put("Département choisi", departement);
-
+                user.put("image_entreprise", image);
 
                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener() {
                     @Override
