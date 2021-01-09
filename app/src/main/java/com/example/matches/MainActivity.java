@@ -46,10 +46,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(this, MatchActivity.class);
         String typeUser;
         if(value){
-            typeUser = "entreprise";
+            typeUser = "etudiant";
         }
         else{
-            typeUser = "etudiant";
+            typeUser = "entreprise";
         }
         intent.putExtra("typeUser", typeUser);
         startActivity(intent);
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
 
                 });
-
+        Log.e("String", String.valueOf(result[0]));
         return result[0];
 
     }
