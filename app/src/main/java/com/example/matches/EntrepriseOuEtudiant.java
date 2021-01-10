@@ -4,18 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
-import java.util.Arrays;
-import java.util.List;
-
+/**
+ * Intent(Page) EntrepriseOuEtudiant
+ * son but est de differencier l'utilisatuer si c'est un étudiant un une entreprise
+ */
 public class EntrepriseOuEtudiant extends AppCompatActivity {
     private Button etudiant, entreprise;
 
@@ -26,31 +22,25 @@ public class EntrepriseOuEtudiant extends AppCompatActivity {
         etudiant = (Button) findViewById(R.id.Etudiant);
         entreprise = (Button) findViewById(R.id.Entreprise);
 
+        /**
+         * lors de l'appuis sur le boutton etudiant ou ouvre l'intent(page) de l'inscription de l'étudiant
+         */
         etudiant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                etudiantlaunch();
+                startActivity(new Intent(getApplicationContext(), RegistersActivity.class));
             }
         });
+
+        /**
+         * lors de l'appuis sur le boutton entreprise ou ouvre l'intent(page) de l'inscription de l'entreprise
+         */
         entreprise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                entrepriselaunch();
+                startActivity(new Intent(getApplicationContext(), RegisterEntrepriseActivity.class));
             }
         });
     }
-
-    public void etudiantlaunch() {
-        Intent intent = new Intent(this, RegistersActivity.class);
-        startActivity(intent);
-
-    }
-
-    public void entrepriselaunch() {
-        Intent intent = new Intent(this, RegisterEntrepriseActivity.class);
-        startActivity(intent);
-    }
-
-
 
 }

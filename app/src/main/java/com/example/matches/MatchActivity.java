@@ -36,32 +36,27 @@ public class MatchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matchs);
-
         mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
-
         stage = (Button) findViewById(R.id.stage);
         disconnectButton = findViewById(R.id.disconnectButton);
         profilButton = findViewById(R.id.profilButton);
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         userId = firebaseAuth.getCurrentUser().getUid();
+
+
         stage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-                Intent intent = new Intent(getApplicationContext(), StageCreationActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), StageCreationActivity.class));
             }
         });
-
 
         final DocumentReference documentReference = firestore.collection("entreprise").document(userId);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot.getString("nom_entreprise") == null) {
-
                     firestore.collection("offreStage")
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -69,13 +64,9 @@ public class MatchActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if (task.isSuccessful()) {
                                         ContentProfil profil;
-                                        Log.e("Test1", "tesr");
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            Log.e("Test", "tesr");
+                                        for (final QueryDocumentSnapshot document : task.getResult()) {
                                             profil = new ContentProfil(document.getString("Titre"), document.getString("dateDebut"), document.getString("dateFin"), document.getString("image_entreprise"), document.getString("compétenceStage"), document.getString("descriptionStage"), document.getString("idEntreprise"));
                                             mSwipeView.addView(new ProfilCard(profil, mSwipeView, MatchActivity.this));
-
-
                                         }
                                     } else {
                                         Log.d("e", "Error getting documents: ", task.getException());

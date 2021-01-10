@@ -63,7 +63,7 @@ public class Profil_Entreprise extends AppCompatActivity {
             id = null;
         } else {
             id = extras.getString("id");
-            titre = extras.getString("nomStage");
+            titre = extras.getString("nomstage");
             dateDebut = extras.getString("datedebut");
             dateFin = extras.getString("datefin");
             description = extras.getString("description");
@@ -74,8 +74,8 @@ public class Profil_Entreprise extends AppCompatActivity {
             modif.setVisibility(View.INVISIBLE);
             titreText.setText(titre);
             date.setText("Stage du " + dateDebut + " au " + dateFin);
-            descriptionText.setText(description);
-            competenceText.setText(competences);
+            descriptionText.setText("Desciption du stage: \n" + description);
+            competenceText.setText("Competences requise: \n" + competences);
         }
 
 
