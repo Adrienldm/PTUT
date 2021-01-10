@@ -42,7 +42,7 @@ public class profil extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
         NomAge = (TextView) findViewById(R.id.textView);
-        tel = (TextView) findViewById(R.id.textView14);
+        tel = (TextView) findViewById(R.id.titre);
         mail = (TextView) findViewById(R.id.textView13);
         adresse = (TextView) findViewById(R.id.textView4);
         description = (TextView) findViewById(R.id.textView6);
