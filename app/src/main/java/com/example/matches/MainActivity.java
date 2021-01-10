@@ -3,6 +3,7 @@ package com.example.matches;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -16,53 +17,78 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-/**
- * Intent d'ouverture de l'application
- * Elle permet de ce connecter avec ses identifants
- * Elle permet  aussi de passerelle à l'incription
- */
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public TextView identifiantTextView;
     public TextView passwordTextView;
+    public TextView nomEntrepriseTextView;
+    public TextView dernierMessageTextView;
+    public TextView messageEditTextView;
     public Button validationConnexionButton;
     public FirebaseAuth fAuth;
     public ProgressBar progressBar;
     public TextView register;
+
+    public void startregister() {
+        Intent intent = new Intent(this, EntrepriseOuEtudiant.class);
+        startActivity(intent);
+    }
+
+    public void startregister2(boolean value) {
+        Intent intent = new Intent(this, MatchActivity.class);
+        String typeUser;
+        if(value){
+            typeUser = "etudiant";
+        }
+        else{
+            typeUser = "entreprise";
+        }
+        intent.putExtra("typeUser", typeUser);
+        startActivity(intent);
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connexion);
+
         validationConnexionButton = (Button) findViewById(R.id.validationConnexionButton);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //redefinition des textview vers les fichier xml
         identifiantTextView = (TextView) findViewById(R.id.identifiantTextView);
         passwordTextView = (TextView) findViewById(R.id.passwordTextView);
         fAuth = FirebaseAuth.getInstance();
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         register = (TextView) findViewById(R.id.modifier);
 
+        //go to register page
 
-        /**
-         * lors de l'appui sur le texte "Pas encore inscrit? clique ici" ouvre l'intent(page) EntreprisOuEtudiant
-         */
+
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), EntrepriseOuEtudiant.class));
+                startregister();
             }
         });
 
 
-        /**
-         * Lors de l'appui sur le boutton "CONNEXION" ou vas vérifier si les champs de text login et password ne sont pas vide sinon on met une erreur qui vas afficher a l'ecran qu'on doit ecrire dans ces champs
-         * Puis on demande a la base de donnée si le login et le password rentrés sont correct et si c'est vrai on fait un toast qui alerte l'utilisateur qui est connecté et on ouvre l'intent(page) MatchActivity
-         * Sinon on alerte l'utilisateur avec un taost "Mauvais identifiant ou mot de passe"
-         */
+        //login btn
         validationConnexionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //prendre l'instance de la firebase
+                final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
                 String login = identifiantTextView.getText().toString().trim();
                 String password = passwordTextView.getText().toString().trim();
 
@@ -87,7 +113,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (task.isSuccessful()) {
                             Toast.makeText(MainActivity.this, "succeful login", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.INVISIBLE);
-                            startActivity(new Intent(getApplicationContext(), MatchActivity.class));
+                            startregister2(searchTypeUser(fAuth.getCurrentUser().getUid()));
+
+
                         } else {
                             Toast.makeText(MainActivity.this, "Mauvais identifiant ou mot de passe ", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.INVISIBLE);
@@ -107,4 +135,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.setContentView(R.layout.activity_matchs);
     }
 
+    public boolean searchTypeUser(String userId){
+        // false veut dire que l'utilisateur est une entreprise
+        final boolean[] result = new boolean[1];
+        final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        database.child("entreprise")
+                .child(userId) // Create a reference to the child node directly
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // This callback will fire even if the node doesn't exist, so now check for existence
+                        if (dataSnapshot.exists()) {
+                            result[0] = false;
+                        } else {
+                            result[0] = true;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e("Error", String.valueOf(databaseError));
+                    }
+
+                });
+        Log.e("String", String.valueOf(result[0]));
+        return result[0];
+
+    }
 }

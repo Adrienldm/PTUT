@@ -16,6 +16,9 @@
             android:name=".Profil_Entreprise"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ChatActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ModificationProfilEtudiant"
             android:screenOrientation="portrait" />
 

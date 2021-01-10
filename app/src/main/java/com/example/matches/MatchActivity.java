@@ -28,7 +28,7 @@ public class MatchActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
     String userId;
-    Button disconnectButton, profilButton, stage;
+    Button disconnectButton, profilButton, stage, chatButton;
     SwipePlaceHolderView mSwipeView;
 
 
@@ -40,6 +40,7 @@ public class MatchActivity extends AppCompatActivity {
         stage = (Button) findViewById(R.id.stage);
         disconnectButton = findViewById(R.id.disconnectButton);
         profilButton = findViewById(R.id.profilButton);
+        chatButton = findViewById(R.id.chatButton);
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         userId = firebaseAuth.getCurrentUser().getUid();
@@ -148,6 +149,14 @@ public class MatchActivity extends AppCompatActivity {
 
                     }
                 });
+            }
+        });
+
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                startActivity(intent);
             }
         });
 
