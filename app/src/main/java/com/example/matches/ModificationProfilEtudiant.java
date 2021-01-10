@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +20,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -46,7 +56,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-public class ModificationProfilEtudiant extends AppCompatActivity {
+public class ModificationProfilEtudiant extends AppCompatActivity implements OnMapReadyCallback{
     final String randomkey = UUID.randomUUID().toString();
     public Uri imageUri;
     TextView Nom, Prenom, Age, tel, mail, adresse, description;
@@ -56,6 +66,12 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
     FirebaseStorage storage;
     ImageView profilepic;
     String img;
+    LatLng myPosition = new LatLng(48.0667, -0.7667);;
+    private SeekBar distanceSeekBar;
+    private TextView distanceTextView;
+    private MapView mapView;
+    private GoogleMap gMap;
+    Circle circle;
     final String randomPDFkey = UUID.randomUUID().toString();
     private StorageReference storageReference;
     final String randomPDFkey2 = UUID.randomUUID().toString();
@@ -66,6 +82,9 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private Button cvButton, motivButton;
     private String cvNom, motivNom;
+
+
+    private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +98,8 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
         mail = (TextView) findViewById(R.id.mail);
         adresse = (TextView) findViewById(R.id.adresse);
         description = (TextView) findViewById(R.id.desc);
+        distanceSeekBar = (SeekBar) findViewById(R.id.distanceSeekBar);
+        distanceTextView = (TextView) findViewById(R.id.distanceTextView);
         profilepic = (ImageView) findViewById(R.id.image1);
         modififer = (Button) findViewById(R.id.modifier);
         info = (RadioButton) findViewById(R.id.info);
@@ -232,15 +253,51 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
                 selectPDFFile();
             }
         });
+
+        distanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progressChangedValue = 0;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                progressChangedValue = i * (i / 140);
+                int value = (progressChangedValue * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
+                distanceTextView.setText("" + progressChangedValue);
+
+                circle.setRadius(progressChangedValue);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+
+            }
+        });
+
+        Bundle mapViewBundle = null;
+        if (savedInstanceState != null) {
+            mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY);
+        }
+
+        mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onCreate(mapViewBundle);
+        mapView.getMapAsync(this);
+
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 100) {
             Place place = Autocomplete.getPlaceFromIntent(data);
-
+            myPosition = place.getLatLng();
             adresse.setText(place.getAddress());
+            newPlace(myPosition);
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -369,6 +426,68 @@ public class ModificationProfilEtudiant extends AppCompatActivity {
         intent.setType("application/pdf");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select PDF File"), 2);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Bundle mapViewBundle = outState.getBundle(MAP_VIEW_BUNDLE_KEY);
+        if (mapViewBundle == null) {
+            mapViewBundle = new Bundle();
+            outState.putBundle(MAP_VIEW_BUNDLE_KEY, mapViewBundle);
+        }
+
+        mapView.onSaveInstanceState(mapViewBundle);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        mapView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mapView.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        gMap = googleMap;
+        gMap.setMinZoomPreference(7);
+        newPlace(myPosition);
+
+    }
+
+    public void newPlace(LatLng newPosition){
+        gMap.clear();
+        gMap.moveCamera(CameraUpdateFactory.newLatLng(newPosition));
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(newPosition);
+
+        gMap.addMarker(markerOptions);
+
+        circle = gMap.addCircle(new CircleOptions().center(new LatLng(newPosition.latitude, newPosition.longitude)).strokeColor(Color.RED));
     }
 
     private void retour() {

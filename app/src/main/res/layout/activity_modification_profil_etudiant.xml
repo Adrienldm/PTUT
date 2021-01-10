@@ -216,6 +216,7 @@
                     android:layout_weight="0"
                     android:max="5000"
                     android:progress="100" />
+
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

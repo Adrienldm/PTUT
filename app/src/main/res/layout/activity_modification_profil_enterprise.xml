@@ -6,101 +6,98 @@
     android:layout_height="match_parent"
     tools:context=".RegisterEntrepriseActivity">
 
-    <TextView
-        android:id="@+id/parametreView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center"
-        android:text="Modification du profil"
-        android:textSize="45sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="146dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/nomE"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.895">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/parametreView3"
+            android:id="@+id/parametreView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
+            android:layout_marginTop="4dp"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:text="Image de l'entrepise"
-            android:textSize="24sp"
+            android:text="Modification du profil"
+            android:textSize="45sp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/image1"
-            android:layout_width="160dp"
-            android:layout_height="141dp"
-            android:layout_marginBottom="7dp"
-            app:srcCompat="@drawable/addpicture" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/parametreView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="Image de l'entrepise"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/image1"
+                android:layout_width="160dp"
+                android:layout_height="141dp"
+                android:layout_marginBottom="7dp"
+                app:srcCompat="@drawable/addpicture" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/nomE"
+                android:layout_width="257dp"
+                android:layout_height="49dp"
+                android:layout_marginTop="15dp"
+                android:hint="Nom de l'entrepise"
+                app:boxBackgroundMode="none" />
+
+            <EditText
+                android:id="@+id/telE"
+                android:layout_width="257dp"
+                android:layout_height="49dp"
+                android:layout_marginTop="30dp"
+                android:hint="Téléphone"
+                android:inputType="phone"
+                app:boxBackgroundMode="none" />
+
+            <EditText
+                android:id="@+id/adresseE"
+                android:layout_width="257dp"
+                android:layout_height="49dp"
+                android:layout_marginTop="30dp"
+                android:hint="Adresse postale"
+                app:boxBackgroundMode="none" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp">
+
+                <Button
+                    android:id="@+id/modif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custombutton"
+                    android:text="modifier"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/nomE"
-        android:layout_width="257dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="360dp"
-        android:hint="Nom de l'entrepise"
-        app:boxBackgroundMode="none"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.103"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/telE"
-        android:layout_width="257dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="424dp"
-        android:hint="Téléphone"
-        android:inputType="phone"
-        app:boxBackgroundMode="none"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.103"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/adresseE"
-        android:layout_width="257dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="488dp"
-        android:hint="Adresse postale"
-        app:boxBackgroundMode="none"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.103"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/modif"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/custombutton"
-        android:text="modifier"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.928"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.951" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
