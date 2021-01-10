@@ -65,7 +65,6 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     String userID, departement;
     public Uri imageUri;
     EditText nom, prenom, adresseMail, motDePasse, telephone, adresse, age, description;
-    final static int SELECT_PICTURE = 1;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private FirebaseStorage storage;
@@ -148,7 +147,13 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
+
         cvButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Appel de la fonction upload pdf lors du click sur le boutton cv
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 i = 1;
@@ -157,6 +162,11 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         });
 
         motivButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Appel de la fonction upload pdf lors du click sur le boutton lettre de motivation
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 i = 2;
@@ -168,6 +178,11 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         register.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Vérification si tout les champs sont bien rentrés pour la creartion d'un etudiant puis creation de cette utilisateur avec tout ses attributs
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 final String email = adresseMail.getText().toString().trim();
@@ -234,6 +249,11 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
 
                 //enregister un utilisateur avec un email et un mdp
                 firebaseAuth.createUserWithEmailAndPassword(email, motDP).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    /**
+                     * Une fois l'utilisateur crée on insere tout ses attibut dans la base de données
+                     *
+                     * @param task
+                     */
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         //lui ajouter DES ATTIBUTS dans la firebase avec firebaseauth et son id
@@ -277,6 +297,12 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         distanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChangedValue = 0;
 
+            /**
+             * Fonction qui vas agrandir le cercle de la map en fonction de la bar de progression
+             * @param seekBar
+             * @param i
+             * @param b
+             */
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 progressChangedValue = i * (i / 140);
@@ -309,6 +335,9 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
+    /**
+     * cette fonction ouvre les dossier du telephone pour choisir un fichier pdf
+     */
     private void selectPDFFile() {
         Intent intent = new Intent();
         intent.setType("application/pdf");
@@ -316,6 +345,9 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         startActivityForResult(Intent.createChooser(intent, "Select PDF File"), 2);
     }
 
+    /**
+     * cette fonction ouvre les dossier du telephone pour choisir une photo
+     */
     private void choosePicture() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -324,6 +356,9 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
+    /**
+     * cette fonction va upload la photo selectionner et le mettre sur la base de données
+     */
     private void uploadPicture() {
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setTitle("Uploading Image...");
@@ -365,7 +400,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
             Place place = Autocomplete.getPlaceFromIntent(data);
             myPosition = place.getLatLng();
             adresse.setText(place.getAddress());
-           newPlace(myPosition);
+            newPlace(myPosition);
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -379,6 +414,9 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
+    /**
+     * cette fonction va upload le pdf selectionner et le mettre sur la base de données
+     */
     private void uploadPDFFile(Uri data) {
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -417,11 +455,17 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
+    /**
+     * fonction qui ouvre l'intent MatchActivity
+     */
     public void startregister2() {
         Intent intent = new Intent(this, MatchActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * cette fonction gere l'autocompexion pour l'adresse de l'utilisateur
+     */
     protected void initAutocompletion() {
         // autocompletion
         Places.initialize(getApplicationContext(), "AIzaSyDA6Tx1FjGwf_joDz7L12GyKi1nK8NC21s");
@@ -439,6 +483,7 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         });
 
     }
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -483,6 +528,11 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         mapView.onLowMemory();
     }
 
+    /**
+     * creation de la google map avec l'endroit ou l'utilisateur habite
+     *
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
@@ -491,7 +541,11 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
-    public void newPlace(LatLng newPosition){
+    /**
+     * creation de la nouvelle position geographique et du cercle d'indication de distance
+     * @param newPosition
+     */
+    public void newPlace(LatLng newPosition) {
         gMap.clear();
         gMap.moveCamera(CameraUpdateFactory.newLatLng(newPosition));
         MarkerOptions markerOptions = new MarkerOptions();

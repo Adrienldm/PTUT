@@ -30,6 +30,11 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+
+/**
+ * Intent(Page) StageCreationActivity
+ * son but est de pouvoir creer un stage
+ */
 public class StageCreationActivity extends AppCompatActivity {
 
     EditText stageTitreEditText;
@@ -63,24 +68,42 @@ public class StageCreationActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         info.setOnClickListener(new View.OnClickListener() {
+            /**
+             * lors du choix du departement par l'utilisateur la valeur a stocker dans la firebase sera "info"
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 departement = "info";
             }
         });
         tc.setOnClickListener(new View.OnClickListener() {
+            /**
+             * lors du choix du departement par l'utilisateur la valeur a stocker dans la firebase sera "info"
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 departement = "tc";
             }
         });
         mmi.setOnClickListener(new View.OnClickListener() {
+            /**
+             * lors du choix du departement par l'utilisateur la valeur a stocker dans la firebase sera "info"
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 departement = "mmi";
             }
         });
         gb.setOnClickListener(new View.OnClickListener() {
+            /**
+             * lors du choix du departement par l'utilisateur la valeur a stocker dans la firebase sera "info"
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 departement = "gb";
@@ -88,6 +111,11 @@ public class StageCreationActivity extends AppCompatActivity {
         });
         dateStageDebutEditTextDate.setInputType(InputType.TYPE_NULL);
         dateStageDebutEditTextDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * ouverture d'une popup sur l'ecran pour rentrer la date choisi plus simplement
+             *
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 final Calendar cldr = Calendar.getInstance();
@@ -108,6 +136,11 @@ public class StageCreationActivity extends AppCompatActivity {
 
         dateStageFinEditTextDate.setInputType(InputType.TYPE_NULL);
         dateStageFinEditTextDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * ouverture d'une popup sur l'ecran pour rentrer la date choisi plus simplement
+             *
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 final Calendar cldr = Calendar.getInstance();
@@ -135,7 +168,15 @@ public class StageCreationActivity extends AppCompatActivity {
             }
         });
 
+
         stageButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * verification si tout les champs on été rentrés
+             * ajout d'un nouveau stage dans la base de donnée
+             *
+             * @param view
+             */
+
             @Override
             public void onClick(View view) {
                 final String Titre = stageTitreEditText.getText().toString().trim();
@@ -207,7 +248,9 @@ public class StageCreationActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * fonction qui permet la fermeture de la page
+     */
     public void startregister2() {
         finish();
     }

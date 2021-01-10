@@ -44,6 +44,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Intent RegisterEntrepriseActivity qui permet l'enregistrement d'un nouvel utilisateur
+ */
 public class RegisterEntrepriseActivity extends AppCompatActivity {
     final String randomkey = UUID.randomUUID().toString();
     Button register;
@@ -242,7 +245,6 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
 }
