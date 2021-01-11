@@ -4,6 +4,9 @@ public class ChatObject {
     private String message;
     private Boolean currentUser;
 
+    /**
+     * C'est la structure qui contient le message ainsi que son destinataire.
+     */
     public ChatObject(String message, Boolean currentUser) {
         this.message = message;
         this.currentUser = currentUser;
@@ -13,15 +16,9 @@ public class ChatObject {
         return message;
     }
 
-    public void setMessage(String userID) {
-        this.message = message;
-    }
 
     public Boolean getCurrentUser() {
         return currentUser;
     }
 
-    public void setCurrentUser(Boolean currentUser) {
-        this.currentUser = currentUser;
-    }
 }

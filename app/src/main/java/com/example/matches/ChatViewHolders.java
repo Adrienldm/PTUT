@@ -6,18 +6,21 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Personnalise le viewHolder en ajoutant les différents éléments comme le textview
+ */
 public class ChatViewHolders extends RecyclerView.ViewHolder implements View.OnClickListener{
-    public TextView mMessage;
-    public LinearLayout mContainer;
+    public TextView messageTextView;
+    public LinearLayout linearLayout;
     public ChatViewHolders(View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
-
-        mMessage = itemView.findViewById(R.id.message);
-        mContainer = itemView.findViewById(R.id.container);
+        linearLayout = itemView.findViewById(R.id.container);
+        messageTextView = itemView.findViewById(R.id.message);
     }
 
     @Override
     public void onClick(View view) {
     }
+
 }

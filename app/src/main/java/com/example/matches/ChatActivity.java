@@ -1,42 +1,18 @@
 package com.example.matches;
 
-import android.content.Intent;
-
 import android.os.Bundle;
 
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.SnapshotParser;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -49,35 +25,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+
+
 import javax.annotation.Nullable;
 
+/**
+ * Intent(Page) MatchActivity
+ * son but est de d'afficher le chat ainsi que toutes les intéractions éventuelles de l'utilisateur
+ */
+
 public class ChatActivity extends AppCompatActivity {
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mChatAdapter;
-    private RecyclerView.LayoutManager mChatLayoutManager;
+    private RecyclerView ownRecyclerView;
+    private ChatAdapter adapter;
+    private RecyclerView.LayoutManager ownLayoutManager;
 
-    private EditText mSendEditText;
+    private EditText sendEditText;
 
-    private Button mSendButton;
+    private Button sendButton;
 
     private String userId, matchId, chatId;
-    private FirebaseAuth firebaseAuth;
-    FirebaseFirestore firestore;
+    private DatabaseReference databaseUser, databaseChat;
+    private ArrayList<ChatObject> resultsChat = new ArrayList<>();
 
-
-    DatabaseReference mDatabaseUser, mDatabaseChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        firebaseAuth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
-        userId = firebaseAuth.getCurrentUser().getUid();
-
-
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
-
+        /**
+         * A chaque fois que l'activité se lance, on regarde si l'utilisateur a déjà un id dans la base de données
+         * de l'application ( qui est différente du storage utilisé précedemment)
+         */
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -99,22 +84,23 @@ public class ChatActivity extends AppCompatActivity {
 
         });
 
-        mDatabaseChat = FirebaseDatabase.getInstance().getReference().child("Chat");
-        mDatabaseUser = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid()).child("ChatId");
-        getChatId();
+        /**
+         * On récupère les différentes données nécessaires
+         */
+        databaseChat = FirebaseDatabase.getInstance().getReference().child("Chat");
+        databaseUser = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ChatId");
+        getIdChat();
+        adapter = new ChatAdapter(getDataSetChat());
+        ownRecyclerView = findViewById(R.id.recyclerView);
+        ownRecyclerView.setNestedScrollingEnabled(false);
+        ownRecyclerView.setHasFixedSize(false);
+        ownLayoutManager = new LinearLayoutManager(ChatActivity.this);
+        ownRecyclerView.setLayoutManager(ownLayoutManager);
+        ownRecyclerView.setAdapter(adapter);
+        sendEditText = findViewById(R.id.message);
+        sendButton = findViewById(R.id.send);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setNestedScrollingEnabled(false);
-        mRecyclerView.setHasFixedSize(false);
-        mChatLayoutManager = new LinearLayoutManager(ChatActivity.this);
-        mRecyclerView.setLayoutManager(mChatLayoutManager);
-        mChatAdapter = new ChatAdapter(getDataSetChat(), ChatActivity.this);
-        mRecyclerView.setAdapter(mChatAdapter);
-
-        mSendEditText = findViewById(R.id.message);
-        mSendButton = findViewById(R.id.send);
-
-        mSendButton.setOnClickListener(new View.OnClickListener() {
+        sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendMessage();
@@ -122,30 +108,35 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * Permet d'envoyer les messages vers la base de données grâce à un objet Message
+     */
     private void sendMessage() {
-        String sendMessageText = mSendEditText.getText().toString();
+        String sendMessageText = sendEditText.getText().toString();
 
         if (!sendMessageText.isEmpty()) {
-            DatabaseReference newMessageDb = mDatabaseChat.push();
+            DatabaseReference newMessageDb = databaseChat.push();
 
             Map newMessage = new HashMap();
             newMessage.put("createdByUser", userId);
             newMessage.put("text", sendMessageText);
-
             newMessageDb.setValue(newMessage);
         }
-        mSendEditText.setText(null);
+        sendEditText.setText(null);
     }
 
-    private void getChatId() {
-        mDatabaseUser.addListenerForSingleValueEvent(new ValueEventListener() {
+    /**
+     * A chaque fois que l'activité se lance ou que une donnée est ajoutée, on récupère l'id du chat
+     */
+    private void getIdChat() {
+        databaseUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     chatId = dataSnapshot.getValue().toString();
-                    mDatabaseChat = mDatabaseChat.child(chatId);
+                    databaseChat = databaseChat.child(chatId);
                     getChatMessages();
+
                 }
             }
 
@@ -154,31 +145,36 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
+    /**
+     * A chaque fois que l'activité se lance ou que une donnée est ajoutée, on récupère les messages du chat
+     */
     private void getChatMessages() {
-        mDatabaseChat.addChildEventListener(new ChildEventListener() {
+        databaseChat.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
                     String message = null;
-                    String createdByUser = null;
+                    String ownerMessage = null;
 
                     if (dataSnapshot.child("text").getValue() != null) {
                         message = dataSnapshot.child("text").getValue().toString();
                     }
                     if (dataSnapshot.child("createdByUser").getValue() != null) {
-                        createdByUser = dataSnapshot.child("createdByUser").getValue().toString();
+                        ownerMessage = dataSnapshot.child("createdByUser").getValue().toString();
                     }
 
-                    if (message != null && createdByUser != null) {
+                    if (message != null && ownerMessage != null) {
                         Boolean currentUserBoolean = false;
-                        if (createdByUser.equals(userId)) {
+                        if (ownerMessage.equals(userId)) {
                             currentUserBoolean = true;
                         }
                         ChatObject newMessage = new ChatObject(message, currentUserBoolean);
                         resultsChat.add(newMessage);
-                        mChatAdapter.notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();
                     }
                 }
 
@@ -202,15 +198,21 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * On crée un utilisateur dans la Realtime Database de Firabse selon si c'est une entreprise ou un étudiant
+     * Architecture : Users
+     *                  Id_Utilisateur
+     *                      Nom
+     *                      ChatId
+     */
     public void createUser() {
         FirebaseDatabase.getInstance().getReference().child("Users").push().setValue(userId);
-        final DocumentReference documentReference = firestore.collection("entreprise").document(userId);
+        final DocumentReference documentReference = FirebaseFirestore.getInstance().collection("entreprise").document(userId);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot.getString("nom_entreprise") == null) {
-                    final DocumentReference documentReference = firestore.collection("etudiant").document(userId);
+                    final DocumentReference documentReference = FirebaseFirestore.getInstance().collection("etudiant").document(userId);
                     documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                         @Override
                         public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -236,10 +238,10 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private ArrayList<ChatObject> resultsChat = new ArrayList<ChatObject>();
 
     private List<ChatObject> getDataSetChat() {
         return resultsChat;
     }
+
 }
 

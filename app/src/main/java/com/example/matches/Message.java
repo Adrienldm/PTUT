@@ -22,12 +22,6 @@ public class Message {
     private String nom;
 
     /**
-     *
-     */
-    public Message() {
-    }
-
-    /**
      * @param text
      * @param nom
      */
