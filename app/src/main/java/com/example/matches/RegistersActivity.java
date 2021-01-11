@@ -55,6 +55,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Intent RegistersActivity permettant d'enregistrer un nouvel étudiant
+ */
 public class RegistersActivity extends AppCompatActivity implements OnMapReadyCallback {
     final String randomkey = UUID.randomUUID().toString();
     final String randomPDFkey = UUID.randomUUID().toString();
@@ -117,30 +120,52 @@ public class RegistersActivity extends AppCompatActivity implements OnMapReadyCa
         distanceTextView = (TextView) findViewById(R.id.distanceTextView);
 
         img1.setOnClickListener(new View.OnClickListener() {
+            /**
+             * appel de la fonction choosePicture lors du clique sur le plus
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 choosePicture();
             }
         });
         info.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Lors du choix du department informatique la derpartement va prendre la valeur "info"
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 departement = "info";
             }
         });
         tc.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Lors du choix du department technique de commercialisation la derpartement va prendre la valeur "tc"
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 departement = "tc";
             }
         });
         mmi.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Lors du choix du department métier du multimedia et de l'informatique la derpartement va prendre la valeur "mmi"
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 departement = "mmi";
             }
         });
         gb.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Lors du choix du department génie biologique la derpartement va prendre la valeur "gb"
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 departement = "gb";

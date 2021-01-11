@@ -85,12 +85,22 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference("uploads");
 
         img1.setOnClickListener(new View.OnClickListener() {
+            /**
+             * appel de la fonction choosePicture lors du clique sur le plus
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 choosePicture();
             }
         });
         register.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Vérification si tout les champs sont bien rentrés pour la creartion d'un etudiant puis creation de cette utilisateur avec tout ses attributs
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 final String email = adresseMail.getText().toString().trim();
@@ -168,6 +178,10 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
 
     }
 
+
+    /**
+     * cette fonction ouvre les dossier du telephone pour choisir une photo
+     */
     private void choosePicture() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -175,6 +189,10 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
+
+    /**
+     * fonction qui ouvre l'intent MatchActivity
+     */
     public void startregister2() {
         Intent intent = new Intent(this, MatchActivity.class);
         startActivity(intent);
@@ -197,6 +215,10 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * cette fonction va upload la photo selectionner et le mettre sur la base de données
+     */
     private void uploadPicture() {
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setTitle("Uploading Image...");
@@ -231,6 +253,10 @@ public class RegisterEntrepriseActivity extends AppCompatActivity {
                 });
     }
 
+
+    /**
+     * cette fonction gere l'autocompexion pour l'adresse de l'utilisateur
+     */
     protected void initAutocompletion() {
         // autocompletion
         Places.initialize(getApplicationContext(), "AIzaSyDA6Tx1FjGwf_joDz7L12GyKi1nK8NC21s");

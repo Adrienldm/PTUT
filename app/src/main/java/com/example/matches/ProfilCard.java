@@ -15,6 +15,9 @@ import com.mindorks.placeholderview.annotations.Resolve;
 import com.mindorks.placeholderview.annotations.View;
 
 @Layout(R.layout.profil_card)
+/**
+ * Class ProfilCard qui gere le remplissages des cartes
+ */
 public class ProfilCard {
 
     @View(R.id.profileImageView)
@@ -33,7 +36,11 @@ public class ProfilCard {
     private int compteur;
     MatchActivity matchActivity;
 
-
+    /**
+     * @param profil
+     * @param swipeView
+     * @param matchActivity2
+     */
     public ProfilCard(ContentProfil profil, SwipePlaceHolderView swipeView, MatchActivity matchActivity2) {
         this.profil = profil;
         mSwipeView = swipeView;
@@ -42,6 +49,9 @@ public class ProfilCard {
         matchActivity = matchActivity2;
     }
 
+    /**
+     * choix de la courte descripton en dessous de la photo
+     */
     @Resolve
     private void onResolved() {
 
@@ -55,12 +65,18 @@ public class ProfilCard {
 
     }
 
+    /**
+     * lancement du profil que l'utilisateur a choisi de regarde en detail
+     */
     @Click(R.id.profileImageView)
     public void onProfileImageViewClick() {
         matchActivity.launch(profil.getId(), profil);
     }
 
 
+    /**
+     * telegargement de l'image de l'utilisateur
+     */
     public void downLoadWithBytes() {
         // Create a storage reference from our app
         FirebaseStorage storage = FirebaseStorage.getInstance();

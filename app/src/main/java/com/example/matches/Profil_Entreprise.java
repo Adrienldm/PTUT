@@ -24,6 +24,9 @@ import com.google.firebase.storage.StorageReference;
 
 import javax.annotation.Nullable;
 
+/**
+ * Intent Profil_Entreprise qui afiiche le profil de l'entreprise
+ */
 public class Profil_Entreprise extends AppCompatActivity {
     TextView Nom, tel, mail, adresse, titreText, date, descriptionText, competenceText;
     FirebaseAuth firebaseAuth;
@@ -58,6 +61,9 @@ public class Profil_Entreprise extends AppCompatActivity {
         userId = firebaseAuth.getCurrentUser().getUid();
         Toast.makeText(getApplicationContext(), "image loading", Toast.LENGTH_LONG).show();
 
+        /**
+         * recuperation des extras ajouter a l'intent pour afficher les stage lier a l'entreprise
+         */
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             id = null;
@@ -81,6 +87,12 @@ public class Profil_Entreprise extends AppCompatActivity {
 
         DocumentReference documentReference = firestore.collection("entreprise").document(id);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            /**
+             * recuperation des donnée dans la base de donner et affichage
+             *
+             * @param documentSnapshot
+             * @param e
+             */
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 // if (documentSnapshot == null) throw new AssertionError();
@@ -94,6 +106,9 @@ public class Profil_Entreprise extends AppCompatActivity {
             }
         });
 
+        /**
+         * lors de l'appuis sur retour on fini l'intent
+         */
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,6 +116,9 @@ public class Profil_Entreprise extends AppCompatActivity {
             }
         });
 
+        /**
+         * ouverture de l'intent ModificationProfilEnterprise une fois la modification du profil faite
+         */
         modif.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,6 +128,9 @@ public class Profil_Entreprise extends AppCompatActivity {
         });
     }
 
+    /**
+     * telechargement de l'image de profil de l'utilisateur
+     */
     public void downLoadWithBytes() {
         // Create a storage reference from our app
         storage = FirebaseStorage.getInstance();

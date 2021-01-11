@@ -110,6 +110,7 @@ public class StageCreationActivity extends AppCompatActivity {
             }
         });
         dateStageDebutEditTextDate.setInputType(InputType.TYPE_NULL);
+
         dateStageDebutEditTextDate.setOnClickListener(new View.OnClickListener() {
             /**
              * ouverture d'une popup sur l'ecran pour rentrer la date choisi plus simplement

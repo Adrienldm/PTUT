@@ -44,6 +44,9 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+/**
+ * Intent ModificationProfilEnterprise permettant la modification du profil de l'entreprise
+ */
 public class ModificationProfilEnterprise extends AppCompatActivity {
 
     final String randomkey = UUID.randomUUID().toString();
@@ -86,6 +89,11 @@ public class ModificationProfilEnterprise extends AppCompatActivity {
         initAutocompletion();
 
         profilepic.setOnClickListener(new View.OnClickListener() {
+            /**
+             * lors de l'appuis sur l'image ouverture de choosePicture();
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 choosePicture();
@@ -95,6 +103,12 @@ public class ModificationProfilEnterprise extends AppCompatActivity {
 
         final DocumentReference documentReference = firestore.collection("entreprise").document(userId);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            /**
+             * recuperation de attrubut de l'utilisateur dans la base données
+             *
+             * @param documentSnapshot
+             * @param e
+             */
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 // if (documentSnapshot == null) throw new AssertionError();
@@ -107,6 +121,11 @@ public class ModificationProfilEnterprise extends AppCompatActivity {
         });
 
         modififer.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Modification des données dans la base de donées et appel de la fonction retour(); en vérifiant que les champ ne sont pas vides
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 final DocumentReference documentReference2 = firestore.collection("entreprise").document(userId);
@@ -159,7 +178,9 @@ public class ModificationProfilEnterprise extends AppCompatActivity {
 
     }
 
-
+    /**
+     * ouverture du dossier du telephone pour choisir une image
+     */
     private void choosePicture() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -167,7 +188,9 @@ public class ModificationProfilEnterprise extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
-
+    /**
+     * telegargement de l'image dans la base de données
+     */
     private void uploadPicture() {
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setTitle("Uploading Image...");
@@ -202,6 +225,10 @@ public class ModificationProfilEnterprise extends AppCompatActivity {
                 });
     }
 
+
+    /**
+     * initialisation de l'autocomplexion pour l'adresse de l'utilisateur
+     */
     protected void initAutocompletion() {
         // autocompletion
         Places.initialize(getApplicationContext(), "AIzaSyDA6Tx1FjGwf_joDz7L12GyKi1nK8NC21s");
@@ -218,6 +245,10 @@ public class ModificationProfilEnterprise extends AppCompatActivity {
 
     }
 
+
+    /**
+     * telegargement de l'image a partir de la base donnée
+     */
     public void downLoadWithBytes() {
         // Create a storage reference from our app
         storage = FirebaseStorage.getInstance();
@@ -234,9 +265,11 @@ public class ModificationProfilEnterprise extends AppCompatActivity {
 
     }
 
-
+    /**
+     * fermeture de l'Intent
+     */
     private void retour() {
-       finish();
+        finish();
     }
 
 }

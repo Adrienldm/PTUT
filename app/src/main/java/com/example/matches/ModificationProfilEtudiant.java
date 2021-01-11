@@ -56,6 +56,9 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+/**
+ * Intent ModificationProfilEtudiant permettant la modification du profil de l'étudiant
+ */
 public class ModificationProfilEtudiant extends AppCompatActivity implements OnMapReadyCallback{
     final String randomkey = UUID.randomUUID().toString();
     public Uri imageUri;
@@ -117,26 +120,44 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("uploads");
-
         info.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Lors du choix du department informatique la derpartement va prendre la valeur "info"
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 departement = "info";
             }
         });
         tc.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Lors du choix du department technique de commercialisation la derpartement va prendre la valeur "tc"
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 departement = "tc";
             }
         });
         mmi.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Lors du choix du department métier du multimedia et de l'informatique la derpartement va prendre la valeur "mmi"
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 departement = "mmi";
             }
         });
         gb.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Lors du choix du department génie biologique la derpartement va prendre la valeur "gb"
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 departement = "gb";
@@ -145,6 +166,10 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
 
         initAutocompletion();
 
+
+        /**
+         * appel de la fonction choosePicture lors de l'appuis sur la photo de profil
+         */
         profilepic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -160,6 +185,11 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                /**
+                 * recuperation des donnée dans la base de donner et affichage
+                 * @param documentSnapshot
+                 * @param e
+                 */
                 // if (documentSnapshot == null) throw new AssertionError();
                 Nom.setText(documentSnapshot.getString("nom_etudiant"));
                 tel.setText(documentSnapshot.getString("telephone_etudiant"));
@@ -179,6 +209,11 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
         });
 
         modififer.setOnClickListener(new View.OnClickListener() {
+            /**
+             * lors de l'appuis sur le boutton modifier on modifie les données de l'utilisateur dans la base de donnée et on appel la fonction retour(); en verifiant que les champs ne sont pas vides
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 final DocumentReference documentReference2 = firestore.collection("etudiant").document(userId);
@@ -239,6 +274,11 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
 
         });
         cvButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * lors de l'appuis sur le boutton cv appel de la fonction selectPDFFile();
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 i = 1;
@@ -247,6 +287,11 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
         });
 
         motivButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * lors de l'appuis sur le boutton lettre de modification appel de la fonction selectPDFFile();
+             *
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 i = 2;
@@ -257,6 +302,12 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
         distanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChangedValue = 0;
 
+            /**
+             * Fonction qui vas agrandir le cercle de la map en fonction de la bar de progression
+             * @param seekBar
+             * @param i
+             * @param b
+             */
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 progressChangedValue = i * (i / 140);
@@ -311,6 +362,9 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
 
     }
 
+    /**
+     * cette fonction va upload le pdf selectionner et le mettre sur la base de données
+     */
     private void uploadPDFFile(Uri data) {
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -346,7 +400,9 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
         });
     }
 
-
+    /**
+     * cette fonction ouvre les dossier du telephone pour choisir un fichier image
+     */
     private void choosePicture() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -354,7 +410,9 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
         startActivityForResult(intent, 1);
     }
 
-
+    /**
+     * cette fonction telecharge l'image dans la base donnée
+     */
     private void uploadPicture() {
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setTitle("Uploading Image...");
@@ -389,6 +447,10 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
                 });
     }
 
+
+    /**
+     * initialisation de l'autocomplexion pour l'adresse
+     */
     protected void initAutocompletion() {
         // autocompletion
         Places.initialize(getApplicationContext(), "AIzaSyDA6Tx1FjGwf_joDz7L12GyKi1nK8NC21s");
@@ -405,6 +467,10 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
 
     }
 
+
+    /**
+     * telechargement de la photo dans la base de données
+     */
     public void downLoadWithBytes() {
         // Create a storage reference from our app
         storage = FirebaseStorage.getInstance();
@@ -421,6 +487,9 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
 
     }
 
+    /**
+     * cette fonction ouvre les dossier du telephone pour choisir un fichier pdf
+     */
     private void selectPDFFile() {
         Intent intent = new Intent();
         intent.setType("application/pdf");
@@ -471,6 +540,11 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
         mapView.onLowMemory();
     }
 
+    /**
+     * creation de la google map avec l'endroit ou l'utilisateur habite
+     *
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
@@ -479,6 +553,11 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
 
     }
 
+
+    /**
+     * creation de la nouvelle position geographique et du cercle d'indication de distance
+     * @param newPosition
+     */
     public void newPlace(LatLng newPosition){
         gMap.clear();
         gMap.moveCamera(CameraUpdateFactory.newLatLng(newPosition));
@@ -490,6 +569,9 @@ public class ModificationProfilEtudiant extends AppCompatActivity implements OnM
         circle = gMap.addCircle(new CircleOptions().center(new LatLng(newPosition.latitude, newPosition.longitude)).strokeColor(Color.RED));
     }
 
+    /**
+     * fonction qui ferme l'Intent
+     */
     private void retour() {
         finish();
     }

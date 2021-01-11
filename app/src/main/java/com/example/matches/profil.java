@@ -27,6 +27,10 @@ import java.text.MessageFormat;
 
 import javax.annotation.Nullable;
 
+/**
+ * Intent permettant l'affichage du profil de l'étudiant
+ */
+
 public class profil extends AppCompatActivity {
     TextView NomAge, tel, mail, adresse, description, departement;
     FirebaseAuth firebaseAuth;
@@ -59,6 +63,9 @@ public class profil extends AppCompatActivity {
         userId = firebaseAuth.getCurrentUser().getUid();
         Toast.makeText(getApplicationContext(), "image loading", Toast.LENGTH_LONG).show();
 
+        /**
+         * recuperation de l'id de l'utilisateur envoyer
+         */
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             id = null;
@@ -73,6 +80,12 @@ public class profil extends AppCompatActivity {
 
         DocumentReference documentReference = firestore.collection("etudiant").document(id);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            /**
+             * recuperation des donnée dans la base de donner et affichage
+             *
+             * @param documentSnapshot
+             * @param e
+             */
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 // if (documentSnapshot == null) throw new AssertionError();
@@ -105,6 +118,9 @@ public class profil extends AppCompatActivity {
             }
         });
 
+        /**
+         * appel de la fonction launchProfil
+         */
         modif.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,6 +128,9 @@ public class profil extends AppCompatActivity {
             }
         });
 
+        /**
+         * ouverture du pdf
+         */
         cv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,6 +140,10 @@ public class profil extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        /**
+         * ouverture du pdf
+         */
         motiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,11 +161,17 @@ public class profil extends AppCompatActivity {
         });
     }
 
+    /**
+     * ouverture de l'intent permettant la modification du profil
+     */
     public void lauchModif() {
         Intent intent = new Intent(this, ModificationProfilEtudiant.class);
         startActivity(intent);
     }
 
+    /**
+     * telegargement de l'image de profil
+     */
     public void downLoadWithBytes() {
         // Create a storage reference from our app
         storage = FirebaseStorage.getInstance();

@@ -24,6 +24,9 @@ import com.mindorks.placeholderview.SwipePlaceHolderView;
 
 import javax.annotation.Nullable;
 
+/**
+ * Intent MatchActivity qui est la page principale de l'application
+ */
 public class MatchActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
@@ -46,6 +49,9 @@ public class MatchActivity extends AppCompatActivity {
         userId = firebaseAuth.getCurrentUser().getUid();
 
 
+        /**
+         * ouverture de l'Intent StageCreationActivity qui permet de crée un stage
+         */
         stage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,6 +63,9 @@ public class MatchActivity extends AppCompatActivity {
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                /**
+                 * affichage dans les cartes les profils des stage lier au entreprises
+                 */
                 if (documentSnapshot.getString("nom_entreprise") == null) {
                     firestore.collection("offreStage")
                             .get()
@@ -81,6 +90,9 @@ public class MatchActivity extends AppCompatActivity {
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    /**
+                                     * affichage dans les cartes les profils etudiants
+                                     */
                                     if (task.isSuccessful()) {
                                         ContentProfil profil;
                                         for (QueryDocumentSnapshot document : task.getResult()) {
@@ -105,6 +117,11 @@ public class MatchActivity extends AppCompatActivity {
 
 
         findViewById(R.id.dislikeButton).setOnClickListener(new View.OnClickListener() {
+            /**
+             * like le profil lors de l'appuis sur le boutton like
+             *
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 mSwipeView.doSwipe(false);
@@ -112,12 +129,20 @@ public class MatchActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.likeButton).setOnClickListener(new View.OnClickListener() {
+            /**
+             * dislike le profil lors de l'appuis sur le boutton like
+             *
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 mSwipeView.doSwipe(true);
             }
         });
 
+        /**
+         * appel de la fonction de deconnection lors de l'appuis sur le boutton deconnexion
+         */
         disconnectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,6 +154,9 @@ public class MatchActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * ouverture le l'Intent Profil de l'utilisateur connecter
+         */
         profilButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -152,6 +180,9 @@ public class MatchActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * ouverture de l'Intent ChatActivity
+         */
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,12 +193,21 @@ public class MatchActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * deconnexion de l'utilisateur sur l'application
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         FirebaseAuth.getInstance().signOut();
     }
 
+    /**
+     * ouverture du profil quand on click sur la carte
+     *
+     * @param id
+     * @param profil
+     */
     public void launch(final String id, final ContentProfil profil) {
         final DocumentReference documentReference = firestore.collection("entreprise").document(userId);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
